@@ -1,0 +1,5 @@
+1.Image resizing and Cropping:Most Studies rescale fundus images to a standard resolution(512x512,224x224)
+2.Contrast Enhancement(CLAHE):Contrast Limited Adaptive Histogram Equalization is universal for improving the visibility of small lesions and overall vessel structure
+3.Illumination Correction/Color Normalization: Correction for non-uniform lighting (by subtracting a median-filtered version from the original) and color normalization of RGB channels improves lesion consistency across heterogeneous datasets and acquisition conditions.
+4.Data Augmentation: Random rotations (±30°), brightness and contrast scaling (±20%), flipping, and zooming (0.9–1.2x) actively mitigate class imbalance and simulate real-world variabilit
+5.DeNoising 
