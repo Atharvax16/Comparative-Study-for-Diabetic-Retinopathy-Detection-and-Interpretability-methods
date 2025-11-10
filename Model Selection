@@ -1,0 +1,5 @@
+1.) ImageNet_pretrained CNN
+1a.)ResNET -> A very deep network (e.g., 152 layers) that uses "residual connections" to address the vanishing gradient problem, improving training for very deep models. 
+1b.)EfficientNET -> 
+1c.)DenseNET
+
