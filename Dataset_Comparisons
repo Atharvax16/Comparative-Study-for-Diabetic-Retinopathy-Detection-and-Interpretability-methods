@@ -1,4 +1,4 @@
-APTOS Dataset:
+APTOS Dataset & EYEpacs Dataset:(35K)
 High Resolution images
 Left and right eyes images with labels
 
@@ -8,3 +8,10 @@ Clinician has rated the presence of diabetic retinopathy in each image on a scal
 2 ->Moderate
 3 ->Severe
 4 ->Proliferative DR
+
+MESSIDOR Dataset:
+It contains:
+1.Image
+2.adjudicated_dme:The adjudicated presence of Diabetic Macular Edema(DME).A Value of 1 usually indicates the presence of clinically significatn DME,0 means absence if DME
+3.adjudicated_gradable:Indicates whether the image was deemed gradable(1 = gradable,0 = ungradable).Some Fundus Images may be blurry or have other artifacts that render them unsuitable for grading.
+ there's no left or right eye image but i don't think there will be a problem
