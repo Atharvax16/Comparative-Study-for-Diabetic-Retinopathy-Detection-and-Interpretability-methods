@@ -3,3 +3,25 @@
 1b.)EfficientNET -> 
 1c.)DenseNET
 
+
+The thing is that there are a very limited set of models which we can use to satisfy the problem we are solving 
+| Model        | Strengths                                                                                                                                                                                | Limitations                                                                                                                          | When to Use                                                                                  |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| ResNet       | Excellent baseline; deep architecture; robust to vanishing gradients. Well-studied for DR and consistently achieves high accuracy on large-scale fundus sets (EyePACS, Messidor, etc.) . | Can be overparameterized for small datasets; coarse explanations (Grad-CAM); less sensitive to subtle lesions than advanced models . | General DR grading/classification; strong/flexible starting point for medical imaging tasks. |
+| DenseNet     | Retains features across layers; efficient/reduces redundancy; high accuracy, especially for small lesion detection .                                                                     | Marginal CPU/GPU efficiency compared to EfficientNet; harder to tune for limited VRAM.                                               | Small-lesion detection; medium-size datasets; interpretable via Grad-CAM++.                  |
+| EfficientNet | State-of-the-art accuracy vs. computation; effective for large datasets and production settings; scales well .                                                                           | Higher complexity to reproduce; sometimes overfits tiny datasets if not well regularized.                                            | Production/deployment; very large datasets. High accuracy, efficient inference.              |
+| VGG          | Simple and interpretable; effective for RGB input; high accuracy in shallow tasks .                                                                                                      | Old architecture; less powerful for subtle/fine-grained grading; not preferred for complex screening.                                | Education, baseline comparison, quick prototyping/small tasks.                               |
+
+Transformer-Based models
+| Model | Strengths                                                                                                                             | Limitations                                                                                             | When to Use                                                                                                   |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| ViT   | Strong at global patterns; scalable; effective in high-volume DR tasks (>10k images) .                                                | Needs very large training datasets; less sensitive for rare/small lesions than Swin; computation-heavy. | Research when global context is valuable and lots of data present; advanced attention-based interpretability. |
+| Swin  | Superior lesion sensitivity—captures local and global features through multi-scale attention; leading performance in recent DR work . | High VRAM usage; complex config; less interpretable for domain experts unless using advanced XAI.       | Fine-grained DR classification, multiscale lesion detection, top-tier AutoML/AI-benchmark scenarios.          |
+
+Early CNN Models
+| Model   | Strengths                                           | Limitations                                                         | When to Use                                                 |
+| ------- | --------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------- |
+| LeNet   | Very lightweight; fast; best for proof-of-concept . | Poor accuracy for fundus; not used for high-res, clinical datasets. | Toy problems, teaching basics, not for publishable DR work. |
+| AlexNet | Historically important; moderate DR accuracy .      | Outperformed by modern CNNs; not considered state-of-the-art.       | Entry-level projects; legacy codebases.                     |
+
+
