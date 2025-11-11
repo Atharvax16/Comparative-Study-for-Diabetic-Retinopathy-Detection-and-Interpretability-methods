@@ -1,0 +1,58 @@
+Imagine you're looking at a fundus image to detect diabetic retinopathy. Your eyes naturally focus on certain areas:
+
+Blood vessels (to check for abnormalities)
+Bright spots (potential exudates)
+Dark spots (potential hemorrhages)
+The optic disc and macula
+
+You pay more attention to these regions than to the black background. This is exactly what the attention mechanism does in Vision Transformers—it learns where to look and how much importance to give to different parts of the image.
+
+
+HOW VIT PROCESSES IMAGES
+Original Image (224×224 pixels)
+         ↓
+Split into patches (16×16 each)
+         ↓
+196 patches (14×14 grid)
+         ↓
+Each patch = one "token"
+
+*Each patch is converted to a vector (like a word in NLP).
+
+
+SELF_ATTENTION MECHANISMS:
+For each patch i:
+  Query (Q_i) = "What am I looking for?"
+  Key (K_j)   = "What information do I contain?" (for all patches j)
+  Value (V_j) = "What information do I provide?"
+
+Attention Score between patch i and patch j:
+  Score(i,j) = similarity(Q_i, K_j) = Q_i · K_j / √d
+
+Attention Weight (normalized):
+  A(i,j) = softmax(Score(i,j)) over all j
+
+Output for patch i:
+  Output_i = Σ A(i,j) × V_j
+---------------------------------------------------------------------
+VIT DONT HAVE SINGLE ATTENTION HEAD THEY HAVE MULTIPLE-ATTENTION HEAD
+Input Patch Embeddings
+         ↓
+    ┌────┴────┬────┬────┬─────┐
+    │         │    │    │     │
+  Head 1   Head 2  Head 3 ... Head 12
+  (vessels) (exudates) (hemorrhages)
+    │         │    │    │     │
+    └────┬────┴────┴────┴─────┘
+         ↓
+  Concatenate all heads
+         ↓
+  Linear projection
+         ↓
+  Output (enriched representation)
+----------------------------------------------------------------------
+ViT-Base has 12 transformer layers, each containing multi-head attention:
+Layer 1 (Early): Low-level features (edges, colors, textures)
+Layer 2-4:      Mid-level features (vessel segments, local patterns)
+Layer 5-8:      High-level features (lesion types, anatomical regions)
+Layer 9-12:     Abstract features (disease severity, global context)
