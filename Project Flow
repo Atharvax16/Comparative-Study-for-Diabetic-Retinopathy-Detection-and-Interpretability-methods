@@ -1,0 +1,278 @@
+Research Gap:
+No systematic study exists that compares multiple XAI methods on Vision Transformers for medical imaging, despite:
+
+1.)Recent meta-analysis showing LIME achieves 0.81 fidelity vs SHAP 0.38 vs Grad-CAM 0.54
+2.)MDPI 2024 study comparing 7 XAI methods but only on CNNs
+3.)ResViT FusionNet 2025 using transformers but only 2 XAI methods without validation.
+
+┌─────────────────────────────────────────────────────────────┐
+│                    PHASE 1: FOUNDATION                       │
+│                     (Weeks 1-4)                              │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  1.1 Dataset Acquisition & Preprocessing     │
+    │  • Download APTOS 2019 (3,662 images)        │
+    │  • Download EyePACS (88,702 images subset)   │
+    │  • Apply CLAHE preprocessing                 │
+    │  • Data augmentation pipeline                │
+    │  • Train/Val/Test split                      │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  1.2 Baseline CNN Implementation             │
+    │  • ResNet50,18 (baseline for comparison)     │
+    │  • Standard training protocol                │
+    │  • Achieve competitive accuracy (>85%)       │
+    │  • Establish performance benchmark           │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  1.3 Literature Review Completion            │
+    │  • Document 5 key papers in detail           │
+    │  • Identify specific gaps                    │
+    │  • Define research questions                 │
+    └──────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│              PHASE 2: TRANSFORMER IMPLEMENTATION             │
+│                     (Weeks 5-8)                              │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  2.1 Vision Transformer (ViT) Setup          │
+    │  • ViT-Base/16K patch architecture           │
+    │  • Pre-training strategy (ImageNet or MAE)   │
+    │  • Fine-tuning on APTOS dataset              │
+    │  • Hyperparameter optimization               │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  2.2 SWIN Transformer Implementation         │
+    │  • SWIN-Tiny or SWIN-Small                   │
+    │  • Hierarchical attention mechanism          │
+    │  • Training with same protocol as ViT        │
+    │  • Performance comparison with ViT           │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  2.3 Performance Benchmarking                │
+    │  • Accuracy, Precision, Recall, F1-Score     │
+    │  • AUC-ROC for each class                    │
+    │  • Confusion matrices                        │
+    │  • Statistical significance testing          │
+    │  OUTPUT: "ViT vs SWIN vs CNN Performance"    │
+    └──────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│         PHASE 3: XAI METHODS IMPLEMENTATION                 │
+│                  (Weeks 9-12)                               │
+│          ⚠️ CORE NOVELTY - FOCUS AREA ⚠️                   │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  3.1 Grad-CAM Implementation                 │
+    │  • Apply to CNN (ResNet50)                   │
+    │  • Apply to ViT (attention-based Grad-CAM)   │
+    │  • Apply to SWIN Transformer                 │
+    │  • Generate heatmaps for all test images     │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  3.2 SHAP Implementation                     │
+    │  • DeepSHAP for all three models             │
+    │  • Generate SHAP values and visualizations   │
+    │  • Identify most influential features        │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  3.3 LIME Implementation                     │
+    │  • Configure superpixel segmentation         │
+    │  • Address DR-specific challenges            │
+    │  • Generate local explanations               │
+    │  NOTE: MDPI 2024 excluded LIME due to        │
+    │  instability - we'll validate if concerns    │
+    │  are justified for transformers              │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  3.4 Integrated Gradients (Optional+)        │
+    │  • More stable than vanilla gradients        │
+    │  • Baseline comparison                       │
+    │  • Path integration implementation           │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  3.5 Native Transformer Attention ⭐ NOVEL   │
+    │  • Extract attention maps from ViT           │
+    │  • Multi-head attention visualization        │
+    │  • Attention rollout across layers           │
+    │  • Compare with post-hoc XAI methods         │
+    │  RESEARCH QUESTION: Can native attention     │
+    │  replace post-hoc methods?                   │
+    └──────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│       PHASE 4: QUANTITATIVE XAI EVALUATION                   │
+│                  (Weeks 13-16)                               │
+│          ⚠️ MAJOR DIFFERENTIATION ⚠️                        │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  4.1 Fidelity Metrics                        │
+    │  • AOPC (Area Over Perturbation Curve)       │
+    │  • Measure prediction change when removing   │
+    │    important pixels identified by XAI        │
+    │  • Higher AOPC = more faithful explanation   │
+    │  COMPARE: Which XAI method has highest       │
+    │  fidelity for ViT vs SWIN vs CNN?            │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  4.2 Stability Metrics                       │
+    │  • Generate explanations for perturbed       │
+    │    versions of same image (rotation, noise)  │
+    │  • Calculate consistency score               │
+    │  • Identify which methods are most stable    │
+    │  INSIGHT: MDPI 2024 found simpler models     │
+    │  have better stability - do transformers?    │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  4.3 Localization Accuracy ⭐ CRITICAL       │
+    │  • Use IDRiD dataset (pixel-level lesion     │
+    │    annotations available)                    │
+    │  • Calculate IoU (Intersection over Union)   │
+    │  • Calculate Dice Coefficient                │
+    │  • Compare XAI heatmaps with ground truth    │
+    │  VALIDATION: Do explanations align with      │
+    │  actual lesion locations?                    │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  4.4 Conformity Score (Alghamdi 2022)        │
+    │  • Proportion of attention on DR signs       │
+    │  • Values from 0 (poor) to 1 (perfect)       │
+    │  • Extension: Apply to transformers          │
+    │  NOVEL: First conformity analysis for ViT    │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  4.5 Comparative Analysis Dashboard          │
+    │  • Create comprehensive comparison table     │
+    │  • Statistical significance testing          │
+    │  • Visualization of all metrics              │
+    │  OUTPUT: "Which XAI method is best for       │
+    │  which transformer architecture?"            │
+    └──────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│         PHASE 5: CLINICAL VALIDATION                        │
+│                  (Weeks 17-20)                              │
+│          ⚠️ UNIQUE CONTRIBUTION ⚠️                         │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  5.1 Survey Design                           │
+    │  • Create structured questionnaire           │
+    │  • Select 50-100 test cases                  │
+    │  • Prepare explanation visualizations        │
+    │  • IRB approval (if required)                │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  5.2 Ophthalmologist Evaluation              │
+    │  • Recruit 3-5 ophthalmologists              │
+    │  • Present: Image + Prediction + Explanation │
+    │  • Collect ratings on:                       │
+    │    - Explanation clarity (1-5 scale)         │
+    │    - Actionability for diagnosis             │
+    │    - Trust in AI prediction                  │
+    │    - Preference: CNN vs ViT vs SWIN          │
+    │  • Qualitative feedback on failure cases     │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  5.3 Analysis of Clinical Feedback           │
+    │  • Inter-rater agreement (Kappa statistic)   │
+    │  • Identify which XAI method clinicians      │
+    │    prefer and why                            │
+    │  • Document failure modes and concerns       │
+    │  OUTPUT: "Clinical Validation Report"        │
+    └──────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│         PHASE 6: ATTENTION MECHANISM ANALYSIS               │
+│                  (Weeks 17-20, Parallel)                    │
+│          ⚠️ TRANSFORMER-SPECIFIC NOVELTY ⚠️                │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  6.1 Multi-Head Attention Analysis           │
+    │  • Extract attention from all 12 heads (ViT) │
+    │  • Visualize what each head focuses on       │
+    │  • Hypothesis: Different heads learn         │
+    │    different features (vessels, lesions, etc)│
+    │  RESEARCH QUESTION: What do attention heads  │
+    │  learn for DR detection?                     │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  6.2 Attention Rollout & Layer Analysis      │
+    │  • Aggregate attention across all layers     │
+    │  • Track how attention evolves depth-wise    │
+    │  • Compare early vs late layer attention     │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  6.3 Attention vs Post-Hoc XAI Comparison    │
+    │  • Correlation analysis:                     │
+    │    Native attention vs Grad-CAM              │
+    │    Native attention vs SHAP                  │
+    │  • When do they agree/disagree?              │
+    │  • Which is more accurate? (validate with    │
+    │    ground-truth lesions)                     │
+    │  CRITICAL FINDING: Can attention alone       │
+    │  serve as explanation?                       │
+    └──────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│         PHASE 7: THESIS WRITING & FINALIZATION               │
+│                  (Weeks 21-24)                               │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  7.1 Results Compilation                     │
+    │  • All performance metrics                   │
+    │  • All XAI evaluation results                │
+    │  • Clinical validation findings              │
+    │  • Statistical analysis                      │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  7.2 Discussion & Interpretation             │
+    │  • Why did ViT/SWIN outperform CNNs?         │
+    │  • Which XAI method is most reliable?        │
+    │  • Clinical implications                     │
+    │  • Limitations and future work               │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  7.3 Thesis Document                         │
+    │  • Introduction & Literature Review          │
+    │  • Methodology                               │
+    │  • Results                                   │
+    │  • Discussion                                │
+    │  • Conclusion                                │
+    │  • Appendices (code, survey, data)           │
+    └──────────────────────────────────────────────┘
+                            ↓
+    ┌──────────────────────────────────────────────┐
+    │  7.4 Deliverables                            │
+    │  ✅ Trained models (ViT, SWIN, CNN)          │
+    │  ✅ XAI framework code (open-source)         │
+    │  ✅ Evaluation metrics toolkit               │
+    │  ✅ Clinical validation report               │
+    │  ✅ Complete thesis document                 │
+    │  ✅ Conference paper draft (optional)        │
+    └──────────────────────────────────────────────┘
