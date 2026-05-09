@@ -1,0 +1,11 @@
+degradation,level,efficientnet_b3,resnet50,vit_base
+blur,high,0.544,0.551,0.608
+blur,low,0.747,0.674,0.679
+blur,mid,0.601,0.615,0.658
+clean,none,0.806,0.838,0.686
+exposure,high,0.743,0.761,0.424
+exposure,low,0.793,0.82,0.631
+exposure,mid,0.793,0.82,0.383
+noise,high,0.105,0.396,0.633
+noise,low,0.777,0.722,0.686
+noise,mid,0.121,0.608,0.677

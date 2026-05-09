@@ -1,0 +1,4 @@
+condition,accuracy,mean_trust,mean_insertion,n,baseline_acc,baseline_f1
+blur,0.45,0.3303,0.3423,80,,
+clean,0.6875,0.5697,0.4885,80,0.8454545454545455,0.7254775961894983
+exposure,0.625,0.5225,0.4888,80,,

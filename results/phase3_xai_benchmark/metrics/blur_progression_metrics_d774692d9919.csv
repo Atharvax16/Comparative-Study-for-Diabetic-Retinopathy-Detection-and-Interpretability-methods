@@ -1,0 +1,13 @@
+model,method,condition,insertion_auc,deletion_auc,stability
+resnet50,gradcam,clean,0.8083,0.6851,1.0
+resnet50,gradcam,low,0.9312,0.7984,0.8682
+resnet50,gradcam,mid,0.9096,0.7352,0.8335
+resnet50,gradcam,high,0.7951,0.369,0.8011
+efficientnet_b3,gradcam,clean,0.7846,0.5509,1.0
+efficientnet_b3,gradcam,low,0.8514,0.6313,0.6321
+efficientnet_b3,gradcam,mid,0.7306,0.3078,0.3154
+efficientnet_b3,gradcam,high,0.713,0.4519,-0.0617
+vit_base,attention,clean,0.7957,0.3893,1.0
+vit_base,attention,low,0.7956,0.5338,0.8572
+vit_base,attention,mid,0.5768,0.4061,0.7649
+vit_base,attention,high,0.4383,0.3802,0.683

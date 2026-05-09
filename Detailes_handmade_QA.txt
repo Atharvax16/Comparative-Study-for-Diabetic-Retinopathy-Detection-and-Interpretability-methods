@@ -1,0 +1,16 @@
+APTOS and EYEPACS
+
+Quality Filtering -> The idea is that APTOS images aren't all photographed equally well- noisy,dark,blurry from the camera. If we train on bad quality OG's we create a problem
+So when we test our model on synthetically degraded imagesPhase4 you cant tell whether poor performance is because the model can't handle blur or because the model never learned from clean images in the first place.
+
+So the pipeline does is:take the APTOS dataset,run each image through EYEQ's quality assessment and keep only the good quality images.This gives you clean,high quality base set.
+
+			PURITY OVER QUANTITY
+
+this is more about the medical imaging and thesis and DL like i want that but not too much also write I read research papers daily etc 
+
+thinking like an analtiycal mind deep diving into the problem undertanding the problems trying to statistically perfect then taking actions for bringn a change 
+
+Also seeking job opportunintues across ireland
+
+Act as a PHD researcher and give me the best about section that woould you write with this inormation

@@ -1,0 +1,10 @@
+degradation,level,n_images
+blur,low,0
+blur,mid,0
+blur,high,0
+exposure,low,0
+exposure,mid,0
+exposure,high,0
+noise,low,0
+noise,mid,0
+noise,high,0
