@@ -1,0 +1,37 @@
+### CELL 60  |  first line: # Qualitative IG figure — Integrated Gradients heatmap for ALL three models,
+================================================================================
+
+--- output[0] ---
+IG function in registry : shap_heatmap
+  computing IG for resnet50...
+
+--- output[1] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[2] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[3] ---
+  computing IG for efficientnet_b3...
+
+--- output[4] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[5] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[6] ---
+  computing IG for vit_base...
+
+--- output[7] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[8] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[9] ---
+<Figure size 1300x960 with 12 Axes>
+
+--- output[10] ---
+Saved: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/samples/qualitative_IG_d774692d9919.png
+

@@ -1,0 +1,14 @@
+### CELL 83  |  first line: # 5.5 Aggregate vs single-best baseline (Phase 2)
+================================================================================
+
+--- output[0] ---
+  condition  accuracy  mean_trust  mean_insertion   n  baseline_acc  \
+0      blur    0.5375      0.3125          0.3155  80           NaN   
+1     clean    0.6500      0.6242          0.6044  80      0.813636   
+2  exposure    0.5625      0.5467          0.5198  80           NaN   
+
+   baseline_f1  
+0          NaN  
+1     0.673319  
+2          NaN  
+

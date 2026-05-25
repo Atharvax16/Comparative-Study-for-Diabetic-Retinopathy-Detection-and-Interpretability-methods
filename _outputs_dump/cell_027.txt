@@ -1,0 +1,6 @@
+### CELL 27  |  first line: def train_v2(name, train_loader, val_loader, ckpt_path, history_csv, hp, class_weights):
+================================================================================
+
+--- output[0] ---
+train_v2 ready.
+

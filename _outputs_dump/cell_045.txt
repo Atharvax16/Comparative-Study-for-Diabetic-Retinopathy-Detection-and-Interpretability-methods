@@ -1,0 +1,131 @@
+### CELL 45  |  first line: best_v3 = stress_df_v3[stress_df_v3["degradation"] == "clean"] \
+================================================================================
+
+--- output[0] ---
+Best v3 (teacher): vit_base
+
+--- Distilling vit_base -> resnet50 ---
+  [MultiScaleClassifier] vit_base_patch16_clip_384.laion2b_ft_in12k_in1k: using last 3 of 3 stages, dims=[768, 768, 768], total=2304
+
+--- output[1] ---
+model.safetensors:   0%|          | 0.00/354M [00:00<?, ?B/s]
+
+--- output[2] ---
+  [MultiScaleClassifier] convnext_base.fb_in22k_ft_in1k_384: using last 4 of 4 stages, dims=[128, 256, 512, 1024], total=1920
+
+--- output[3] ---
+/tmp/ipykernel_4384/2859803637.py:14: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = GradScaler(enabled=True)
+
+--- output[4] ---
+distill resnet50 ep 1/10:   0%|          | 0/129 [00:00<?, ?it/s]
+
+--- output[5] ---
+/tmp/ipykernel_4384/2859803637.py:24: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+/tmp/ipykernel_4384/2859803637.py:34: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  scaler.step(optim); scaler.update(); sched.step()
+
+--- output[6] ---
+  ep 1: acc=0.5886  kappa=0.7302
+
+--- output[7] ---
+distill resnet50 ep 2/10:   0%|          | 0/129 [00:00<?, ?it/s]
+
+--- output[8] ---
+/tmp/ipykernel_4384/2859803637.py:24: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[9] ---
+  ep 2: acc=0.6659  kappa=0.8004
+
+--- output[10] ---
+distill resnet50 ep 3/10:   0%|          | 0/129 [00:00<?, ?it/s]
+
+--- output[11] ---
+/tmp/ipykernel_4384/2859803637.py:24: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[12] ---
+  ep 3: acc=0.6864  kappa=0.8073
+
+--- output[13] ---
+distill resnet50 ep 4/10:   0%|          | 0/129 [00:00<?, ?it/s]
+
+--- output[14] ---
+/tmp/ipykernel_4384/2859803637.py:24: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[15] ---
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mKeyboardInterrupt[0m                         Traceback (most recent call last)
+[0;32m/tmp/ipykernel_4384/39146309.py[0m in [0;36m<cell line: 0>[0;34m()[0m
+[1;32m      6[0m   [0;32mif[0m [0mstudent[0m [0;34m==[0m [0mbest_v3[0m[0;34m:[0m [0;32mcontinue[0m[0;34m[0m[0;34m[0m[0m
+[1;32m      7[0m   [0mprint[0m[0;34m([0m[0;34mf"\n--- Distilling {best_v3} -> {student} ---"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0;32m----> 8[0;31m   [0mdistill_to[0m[0;34m([0m[0mstudent[0m[0;34m,[0m [0mbest_v3[0m[0;34m,[0m [0mtrain_loader_v3[0m[0;34m,[0m [0mval_loader_v3[0m[0;34m,[0m[0mckpt_path[0m[0;34m=[0m[0mCKPT_DIR_V3[0m [0;34m/[0m [0;34mf"{student}_v3_distilled.pt"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m
+[0;32m/tmp/ipykernel_4384/2859803637.py[0m in [0;36mdistill_to[0;34m(student_name, teacher_name, train_loader, val_loader, ckpt_path, T_temp, alpha, epochs, lr, wd)[0m
+[1;32m     33[0m             [0mscaler[0m[0;34m.[0m[0mscale[0m[0;34m([0m[0mloss[0m[0;34m)[0m[0;34m.[0m[0mbackward[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     34[0m             [0mscaler[0m[0;34m.[0m[0mstep[0m[0;34m([0m[0moptim[0m[0;34m)[0m[0;34m;[0m [0mscaler[0m[0;34m.[0m[0mupdate[0m[0;34m([0m[0;34m)[0m[0;34m;[0m [0msched[0m[0;34m.[0m[0mstep[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 35[0;31m         [0mm[0m [0;34m=[0m [0mevaluate_v3[0m[0;34m([0m[0mstudent[0m[0;34m,[0m [0mval_loader[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     36[0m         [0mprint[0m[0;34m([0m[0;34mf"  ep {ep+1}: acc={m['accuracy']:.4f}  kappa={m['kappa_qw']:.4f}"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     37[0m         [0;32mif[0m [0mm[0m[0;34m[[0m[0;34m"kappa_qw"[0m[0;34m][0m [0;34m>[0m [0mbest_kappa[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py[0m in [0;36mdecorate_context[0;34m(*args, **kwargs)[0m
+[1;32m    122[0m         [0;31m# pyrefly: ignore [bad-context-manager][0m[0;34m[0m[0;34m[0m[0m
+[1;32m    123[0m         [0;32mwith[0m [0mctx_factory[0m[0;34m([0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 124[0;31m             [0;32mreturn[0m [0mfunc[0m[0;34m([0m[0;34m*[0m[0margs[0m[0;34m,[0m [0;34m**[0m[0mkwargs[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    125[0m [0;34m[0m[0m
+[1;32m    126[0m     [0;32mreturn[0m [0mdecorate_context[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/tmp/ipykernel_4384/2762297082.py[0m in [0;36mevaluate_v3[0;34m(model, loader)[0m
+[1;32m     25[0m [0;32mdef[0m [0mevaluate_v3[0m[0;34m([0m[0mmodel[0m[0;34m,[0m [0mloader[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     26[0m     [0mmodel[0m[0;34m.[0m[0meval[0m[0;34m([0m[0;34m)[0m[0;34m;[0m [0mys[0m[0;34m,[0m [0mprobs[0m [0;34m=[0m [0;34m[[0m[0;34m][0m[0;34m,[0m [0;34m[[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 27[0;31m     [0;32mfor[0m [0mx[0m[0;34m,[0m [0my[0m[0;34m,[0m [0m_[0m [0;32min[0m [0mloader[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     28[0m         [0mx[0m [0;34m=[0m [0mx[0m[0;34m.[0m[0mto[0m[0;34m([0m[0mDEVICE[0m[0;34m,[0m [0mnon_blocking[0m[0;34m=[0m[0;32mTrue[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     29[0m         [0mlogits[0m [0;34m=[0m [0mmodel[0m[0;34m([0m[0mx[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/usr/local/lib/python3.12/dist-packages/torch/utils/data/dataloader.py[0m in [0;36m__next__[0;34m(self)[0m
+[1;32m    739[0m                 [0;31m# TODO(https://github.com/pytorch/pytorch/issues/76750)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    740[0m                 [0mself[0m[0;34m.[0m[0m_reset[0m[0;34m([0m[0;34m)[0m  [0;31m# type: ignore[call-arg][0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 741[0;31m             [0mdata[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m_next_data[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    742[0m             [0mself[0m[0;34m.[0m[0m_num_yielded[0m [0;34m+=[0m [0;36m1[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    743[0m             if (
+
+[0;32m/usr/local/lib/python3.12/dist-packages/torch/utils/data/dataloader.py[0m in [0;36m_next_data[0;34m(self)[0m
+[1;32m   1522[0m                     [0;34m"Invalid iterator state: shutdown or no outstanding tasks when fetching next data"[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1523[0m                 )
+[0;32m-> 1524[0;31m             [0midx[0m[0;34m,[0m [0mdata[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m_get_data[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   1525[0m             [0mself[0m[0;34m.[0m[0m_tasks_outstanding[0m [0;34m-=[0m [0;36m1[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1526[0m             [0;32mif[0m [0mself[0m[0;34m.[0m[0m_dataset_kind[0m [0;34m==[0m [0m_DatasetKind[0m[0;34m.[0m[0mIterable[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/usr/local/lib/python3.12/dist-packages/torch/utils/data/dataloader.py[0m in [0;36m_get_data[0;34m(self)[0m
+[1;32m   1471[0m         [0;32melif[0m [0mself[0m[0;34m.[0m[0m_pin_memory[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1472[0m             [0;32mwhile[0m [0mself[0m[0;34m.[0m[0m_pin_memory_thread[0m[0;34m.[0m[0mis_alive[0m[0;34m([0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-> 1473[0;31m                 [0msuccess[0m[0;34m,[0m [0mdata[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m_try_get_data[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   1474[0m                 [0;32mif[0m [0msuccess[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1475[0m                     [0;32mreturn[0m [0mdata[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/usr/local/lib/python3.12/dist-packages/torch/utils/data/dataloader.py[0m in [0;36m_try_get_data[0;34m(self, timeout)[0m
+[1;32m   1308[0m         [0;31m#   (bool: whether successfully get data, any: data if successful else None)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1309[0m         [0;32mtry[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-> 1310[0;31m             [0mdata[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m_data_queue[0m[0;34m.[0m[0mget[0m[0;34m([0m[0mtimeout[0m[0;34m=[0m[0mtimeout[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   1311[0m             [0;32mreturn[0m [0;34m([0m[0;32mTrue[0m[0;34m,[0m [0mdata[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1312[0m         [0;32mexcept[0m [0mException[0m [0;32mas[0m [0me[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/usr/lib/python3.12/queue.py[0m in [0;36mget[0;34m(self, block, timeout)[0m
+[1;32m    178[0m                     [0;32mif[0m [0mremaining[0m [0;34m<=[0m [0;36m0.0[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    179[0m                         [0;32mraise[0m [0mEmpty[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 180[0;31m                     [0mself[0m[0;34m.[0m[0mnot_empty[0m[0;34m.[0m[0mwait[0m[0;34m([0m[0mremaining[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    181[0m             [0mitem[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m_get[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    182[0m             [0mself[0m[0;34m.[0m[0mnot_full[0m[0;34m.[0m[0mnotify[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/usr/lib/python3.12/threading.py[0m in [0;36mwait[0;34m(self, timeout)[0m
+[1;32m    357[0m             [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    358[0m                 [0;32mif[0m [0mtimeout[0m [0;34m>[0m [0;36m0[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 359[0;31m                     [0mgotit[0m [0;34m=[0m [0mwaiter[0m[0;34m.[0m[0macquire[0m[0;34m([0m[0;32mTrue[0m[0;34m,[0m [0mtimeout[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    360[0m                 [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    361[0m                     [0mgotit[0m [0;34m=[0m [0mwaiter[0m[0;34m.[0m[0macquire[0m[0;34m([0m[0;32mFalse[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;31mKeyboardInterrupt[0m: 
+

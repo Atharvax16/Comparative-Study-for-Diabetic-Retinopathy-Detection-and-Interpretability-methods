@@ -1,0 +1,8 @@
+### CELL 19  |  first line: # Build a stem -> path index so we don't care about extension or subfolder depth.
+================================================================================
+
+--- output[0] ---
+Indexing APTOS images...
+Indexed 3662 images.
+CSV ids matched: 2930/2930
+

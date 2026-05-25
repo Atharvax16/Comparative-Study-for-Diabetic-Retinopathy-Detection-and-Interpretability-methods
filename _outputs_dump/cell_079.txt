@@ -1,0 +1,9 @@
+### CELL 79  |  first line: if Q_CKPT.exists():
+================================================================================
+
+--- output[0] ---
+model.safetensors:   0%|          | 0.00/46.8M [00:00<?, ?B/s]
+
+--- output[1] ---
+Loaded existing quality classifier.
+

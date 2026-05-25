@@ -1,0 +1,64 @@
+### CELL 67  |  first line: # === V5 PATCH: Cold Diffusion for fundus restoration ===
+================================================================================
+
+--- output[0] ---
+Training Cold Diffusion (~90 min on A100)...
+
+--- output[1] ---
+/tmp/ipykernel_4384/1677035216.py:113: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = GradScaler(enabled=True)
+
+--- output[2] ---
+cold-diff ep 1/4:   0%|          | 0/733 [00:00<?, ?it/s]
+
+--- output[3] ---
+/tmp/ipykernel_4384/1677035216.py:125: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[4] ---
+  ep 1: L1=0.0379
+
+--- output[5] ---
+cold-diff ep 2/4:   0%|          | 0/733 [00:00<?, ?it/s]
+
+--- output[6] ---
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x7a032fed6a20>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/data/dataloader.py", line 1707, in __del__
+    self._shutdown_workers()
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/data/dataloader.py", line 1690, in _shutdown_workers
+    if w.is_alive():
+       ^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 160, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x7a032fed6a20>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/data/dataloader.py", line 1707, in __del__
+    self._shutdown_workers()
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/data/dataloader.py", line 1690, in _shutdown_workers
+    if w.is_alive():
+       ^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 160, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: can only test a child process
+
+--- output[7] ---
+  ep 2: L1=0.0167
+
+--- output[8] ---
+cold-diff ep 3/4:   0%|          | 0/733 [00:00<?, ?it/s]
+
+--- output[9] ---
+  ep 3: L1=0.0142
+
+--- output[10] ---
+cold-diff ep 4/4:   0%|          | 0/733 [00:00<?, ?it/s]
+
+--- output[11] ---
+  ep 4: L1=0.0120
+Saved -> /content/drive/MyDrive/Thesis/checkpoints/cold_diffusion_v5.pt
+Cold Diffusion restorer ready.
+

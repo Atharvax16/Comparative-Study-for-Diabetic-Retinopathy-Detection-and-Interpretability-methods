@@ -1,0 +1,10 @@
+### CELL 38  |  first line: # Rebuild loaders at 384 with Ben Graham preprocessing
+================================================================================
+
+--- output[0] ---
+V3 loaders ready. train=2050  val=440  test=440
+Checkpoints -> /content/drive/MyDrive/Thesis/checkpoints/v3
+History     -> /content/drive/MyDrive/Thesis/results/phase2_model_benchmarking/metrics/v3
+[skip] v3 checkpoints already on Drive — not retraining.
+        Found: resnet50_v3_best.pt efficientnet_b3_v3_best.pt vit_base_v3_best.pt
+

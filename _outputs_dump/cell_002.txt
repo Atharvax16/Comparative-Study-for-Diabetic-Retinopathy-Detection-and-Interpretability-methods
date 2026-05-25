@@ -1,0 +1,11 @@
+### CELL 2  |  first line: !pip install -q timm captum shap grad-cam scikit-image opencv-python-headless tabulate
+================================================================================
+
+--- output[0] ---
+[?25l     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m0.0/7.8 MB[0m [31m?[0m eta [36m-:--:--[0m[2K     [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m [32m7.8/7.8 MB[0m [31m257.7 MB/s[0m eta [36m0:00:01[0m[2K     [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m7.8/7.8 MB[0m [31m134.2 MB/s[0m eta [36m0:00:00[0m
+[?25h  Installing build dependencies ... [?25l[?25hdone
+  Getting requirements to build wheel ... [?25l[?25hdone
+  Preparing metadata (pyproject.toml) ... [?25l[?25hdone
+[2K   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m455.2/455.2 kB[0m [31m37.3 MB/s[0m eta [36m0:00:00[0m
+[?25h  Building wheel for grad-cam (pyproject.toml) ... [?25l[?25hdone
+

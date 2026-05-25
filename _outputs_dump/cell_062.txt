@@ -1,0 +1,127 @@
+### CELL 62  |  first line: # === Self-contained SHAP/IG degradation progression (immune to METHOD_REGISTRY changes) =
+================================================================================
+
+--- output[0] ---
+Rendering IG figures for 3 sample images × 3 degradations = 9 figures total.
+
+--- BLUR progression (IG) for d774692d9919 ---
+  Saved: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/samples/progression_ig/ig_blur_progression_d774692d9919.png
+
+--- output[1] ---
+<Figure size 2400x960 with 24 Axes>
+
+--- output[2] ---
+
+--- EXPOSURE progression (IG) for d774692d9919 ---
+  Saved: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/samples/progression_ig/ig_exposure_progression_d774692d9919.png
+
+--- output[3] ---
+<Figure size 2400x960 with 24 Axes>
+
+--- output[4] ---
+
+--- NOISE progression (IG) for d774692d9919 ---
+  Saved: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/samples/progression_ig/ig_noise_progression_d774692d9919.png
+
+--- output[5] ---
+<Figure size 2400x960 with 24 Axes>
+
+--- output[6] ---
+
+--- BLUR progression (IG) for 2ef4a04aed1b ---
+  Saved: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/samples/progression_ig/ig_blur_progression_2ef4a04aed1b.png
+
+--- output[7] ---
+<Figure size 2400x960 with 24 Axes>
+
+--- output[8] ---
+
+--- EXPOSURE progression (IG) for 2ef4a04aed1b ---
+  Saved: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/samples/progression_ig/ig_exposure_progression_2ef4a04aed1b.png
+
+--- output[9] ---
+<Figure size 2400x960 with 24 Axes>
+
+--- output[10] ---
+
+--- NOISE progression (IG) for 2ef4a04aed1b ---
+  Saved: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/samples/progression_ig/ig_noise_progression_2ef4a04aed1b.png
+
+--- output[11] ---
+<Figure size 2400x960 with 24 Axes>
+
+--- output[12] ---
+
+--- BLUR progression (IG) for 97da093947e8 ---
+  Saved: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/samples/progression_ig/ig_blur_progression_97da093947e8.png
+
+--- output[13] ---
+<Figure size 2400x960 with 24 Axes>
+
+--- output[14] ---
+
+--- EXPOSURE progression (IG) for 97da093947e8 ---
+  Saved: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/samples/progression_ig/ig_exposure_progression_97da093947e8.png
+
+--- output[15] ---
+<Figure size 2400x960 with 24 Axes>
+
+--- output[16] ---
+
+--- NOISE progression (IG) for 97da093947e8 ---
+  Saved: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/samples/progression_ig/ig_noise_progression_97da093947e8.png
+
+--- output[17] ---
+<Figure size 2400x960 with 24 Axes>
+
+--- output[18] ---
+
+=== Computing IG aggregate metrics over 20 total images × 3 degradations ===
+
+--- output[19] ---
+aggregate:   0%|          | 0/17 [00:00<?, ?it/s]
+
+--- output[20] ---
+
+Saved per-image table: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/metrics/degradation_progression_ig_full.csv  (720 rows)
+Saved summary: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/metrics/degradation_progression_ig_summary.csv
+
+=== IG AGGREGATE SUMMARY ===
+          model method     kind level  insertion_auc  deletion_auc  stability  n_images
+efficientnet_b3     IG     blur clean         0.4225        0.3227     1.0000        20
+efficientnet_b3     IG     blur  high         0.2422        0.2024     0.0634        20
+efficientnet_b3     IG     blur   low         0.3099        0.2318     0.1260        20
+efficientnet_b3     IG     blur   mid         0.2744        0.2200     0.0908        20
+efficientnet_b3     IG exposure clean         0.4225        0.3227     1.0000        20
+efficientnet_b3     IG exposure  high         0.3124        0.2162     0.1994        20
+efficientnet_b3     IG exposure   low         0.3632        0.2527     0.1855        20
+efficientnet_b3     IG exposure   mid         0.3419        0.2418     0.1948        20
+efficientnet_b3     IG    noise clean         0.4225        0.3227     1.0000        20
+efficientnet_b3     IG    noise  high         0.1705        0.1525     0.1056        20
+efficientnet_b3     IG    noise   low         0.2970        0.2025     0.1374        20
+efficientnet_b3     IG    noise   mid         0.2107        0.1669     0.1374        20
+       resnet50     IG     blur clean         0.4635        0.4597     1.0000        20
+       resnet50     IG     blur  high         0.2655        0.2685     0.1171        20
+       resnet50     IG     blur   low         0.4235        0.3414     0.1632        20
+       resnet50     IG     blur   mid         0.3063        0.2974     0.1135        20
+       resnet50     IG exposure clean         0.4635        0.4597     1.0000        20
+       resnet50     IG exposure  high         0.4340        0.3879     0.2100        20
+       resnet50     IG exposure   low         0.4557        0.4424     0.2259        20
+       resnet50     IG exposure   mid         0.4385        0.4291     0.2191        20
+       resnet50     IG    noise clean         0.4635        0.4597     1.0000        20
+       resnet50     IG    noise  high         0.2094        0.2137     0.1277        20
+       resnet50     IG    noise   low         0.4027        0.3491     0.2006        20
+       resnet50     IG    noise   mid         0.2908        0.2494     0.1608        20
+       vit_base     IG     blur clean         0.5202        0.3293     1.0000        20
+       vit_base     IG     blur  high         0.2958        0.2938     0.1838        20
+       vit_base     IG     blur   low         0.5290        0.3405     0.2533        20
+       vit_base     IG     blur   mid         0.3704        0.2947     0.2074        20
+       vit_base     IG exposure clean         0.5202        0.3293     1.0000        20
+       vit_base     IG exposure  high         0.5727        0.3623     0.3022        20
+       vit_base     IG exposure   low         0.5930        0.4164     0.3268        20
+       vit_base     IG exposure   mid         0.5926        0.4035     0.3205        20
+       vit_base     IG    noise clean         0.5202        0.3293     1.0000        20
+       vit_base     IG    noise  high         0.2573        0.2264     0.2235        20
+       vit_base     IG    noise   low         0.5556        0.3601     0.3246        20
+       vit_base     IG    noise   mid         0.4436        0.2652     0.2591        20
+

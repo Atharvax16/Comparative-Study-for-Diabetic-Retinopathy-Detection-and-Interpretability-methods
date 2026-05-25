@@ -1,0 +1,25 @@
+### CELL 82  |  first line: # 5.4 Run pipeline on test set: clean + blur-high + exposure-high
+================================================================================
+
+--- output[0] ---
+ensemble:   0%|          | 0/80 [00:00<?, ?it/s]
+
+--- output[1] ---
+/tmp/ipykernel_4384/1985193876.py:81: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[2] ---
+        id_code condition  true_label  pred  correct quality_pred route_model  \
+0  84e8c62165b5     clean           2     1        0       reject    resnet50   
+1  84e8c62165b5      blur           2     4        0       reject    resnet50   
+2  84e8c62165b5  exposure           2     4        0       reject    resnet50   
+3  55092c0071eb     clean           2     1        0       reject    resnet50   
+4  55092c0071eb      blur           2     4        0       reject    resnet50   
+
+  route_enhancement route_xai      conf  insertion_auc     trust  
+0             genai   gradcam  0.368527       0.321660  0.345093  
+1             genai   gradcam  0.276367       0.275478  0.275922  
+2             genai   gradcam  0.312510       0.366293  0.339401  
+3             genai   gradcam  0.641145       0.534986  0.588066  
+4             genai   gradcam  0.259860       0.258859  0.259359  
+

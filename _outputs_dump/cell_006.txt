@@ -1,0 +1,16 @@
+### CELL 6  |  first line: # Idempotent extraction — skips automatically if already done in this Colab session.
+================================================================================
+
+--- output[0] ---
+[extract] Thesis.zip -> /content/data
+  inner zip: train_images_768.zip -> /content/data/Thesis/EYEQ/train_images_768
+  inner zip: test_images_768.zip -> /content/data/Thesis/EYEQ/test_images_768
+  inner zip: test_images.zip -> /content/data/Thesis/APTOS/test_images
+  inner zip: train_images.zip -> /content/data/Thesis/APTOS/train_images
+  inner zip: val_images.zip -> /content/data/Thesis/APTOS/val_images
+Detected APTOS dir: /content/data/Thesis/APTOS
+Detected EyeQ  dir: /content/data/Thesis/EYEQ
+  /content/data/aptos -> /content/data/Thesis/APTOS
+  /content/data/eyeq -> /content/data/Thesis/EYEQ
+[extract] done in 3249.8s
+

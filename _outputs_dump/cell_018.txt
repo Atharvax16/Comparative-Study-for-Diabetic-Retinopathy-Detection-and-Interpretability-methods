@@ -1,0 +1,18 @@
+### CELL 18  |  first line: # Diagnose the actual APTOS image layout
+================================================================================
+
+--- output[0] ---
+APTOS_IMAGES : /content/data/aptos/train_images
+Exists?       : True
+Total files under APTOS_IMAGES (any depth): 2934
+Image files found                          : 2930
+Sample image paths:
+  train_images/de4cdabbce6d.png
+  train_images/ae8472f8d310.png
+  train_images/2cceb07ff706.png
+  train_images/4360a112db10.png
+  train_images/236f56771ec6.png
+
+Sample id_code from CSV: 1ae8c165fd53
+Sample image stem      : de4cdabbce6d
+

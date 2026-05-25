@@ -1,0 +1,189 @@
+### CELL 71  |  first line: # 4.3 Build enhanced versions of every degraded image (test ids only)
+================================================================================
+
+--- output[0] ---
+clahe/blur/low:   0%|          | 0/440 [00:30<?, ?it/s]
+
+--- output[1] ---
+clahe/blur/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[2] ---
+clahe/blur/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[3] ---
+clahe/exposure/low:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[4] ---
+clahe/exposure/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[5] ---
+clahe/exposure/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[6] ---
+clahe/noise/low:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[7] ---
+clahe/noise/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[8] ---
+clahe/noise/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[9] ---
+genai/blur/low:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[10] ---
+/tmp/ipykernel_4384/1985193876.py:81: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[11] ---
+genai/blur/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[12] ---
+/tmp/ipykernel_4384/1985193876.py:81: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[13] ---
+genai/blur/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[14] ---
+/tmp/ipykernel_4384/1985193876.py:81: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[15] ---
+genai/exposure/low:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[16] ---
+/tmp/ipykernel_4384/1985193876.py:81: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[17] ---
+genai/exposure/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[18] ---
+/tmp/ipykernel_4384/1985193876.py:81: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[19] ---
+genai/exposure/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[20] ---
+/tmp/ipykernel_4384/1985193876.py:81: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[21] ---
+genai/noise/low:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[22] ---
+/tmp/ipykernel_4384/1985193876.py:81: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[23] ---
+genai/noise/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[24] ---
+/tmp/ipykernel_4384/1985193876.py:81: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[25] ---
+genai/noise/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[26] ---
+/tmp/ipykernel_4384/1985193876.py:81: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[27] ---
+cold_diff/blur/low:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[28] ---
+cold_diff/blur/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[29] ---
+cold_diff/blur/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[30] ---
+cold_diff/exposure/low:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[31] ---
+cold_diff/exposure/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[32] ---
+cold_diff/exposure/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[33] ---
+cold_diff/noise/low:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[34] ---
+cold_diff/noise/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[35] ---
+cold_diff/noise/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[36] ---
+swinir_gan/blur/low:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[37] ---
+  generator: basicsr SwinIR (slim)
+
+--- output[38] ---
+/tmp/ipykernel_4384/318491415.py:170: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[39] ---
+swinir_gan/blur/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[40] ---
+/tmp/ipykernel_4384/318491415.py:170: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[41] ---
+swinir_gan/blur/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[42] ---
+/tmp/ipykernel_4384/318491415.py:170: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[43] ---
+swinir_gan/exposure/low:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[44] ---
+/tmp/ipykernel_4384/318491415.py:170: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[45] ---
+swinir_gan/exposure/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[46] ---
+/tmp/ipykernel_4384/318491415.py:170: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[47] ---
+swinir_gan/exposure/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[48] ---
+/tmp/ipykernel_4384/318491415.py:170: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[49] ---
+swinir_gan/noise/low:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[50] ---
+/tmp/ipykernel_4384/318491415.py:170: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[51] ---
+swinir_gan/noise/mid:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[52] ---
+/tmp/ipykernel_4384/318491415.py:170: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[53] ---
+swinir_gan/noise/high:   0%|          | 0/440 [00:00<?, ?it/s]
+
+--- output[54] ---
+/tmp/ipykernel_4384/318491415.py:170: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=True):
+
+--- output[55] ---
+Enhanced sets ready.
+

@@ -1,0 +1,7 @@
+### CELL 51  |  first line: # === V4 PATCH: Replace KernelSHAP with Integrated Gradients (Captum) ===
+================================================================================
+
+--- output[0] ---
+XAI registry updated: 'shap' entry now uses Integrated Gradients.
+Method dispatch: {'gradcam': 'gradcam_heatmap', 'shap': 'ig_heatmap', 'attention': 'attention_rollout'}
+

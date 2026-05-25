@@ -1,0 +1,14 @@
+### CELL 80  |  first line: # 5.2 Pick best_clean and best_robust from Phase 2 results
+================================================================================
+
+--- output[0] ---
+best_clean : efficientnet_b3
+best_robust: resnet50
+
+--- output[1] ---
+{'good': {'enhancement': 'none', 'model': 'efficientnet_b3', 'xai': 'gradcam'},
+ 'usable': {'enhancement': 'clahe',
+  'model': 'efficientnet_b3',
+  'xai': 'gradcam'},
+ 'reject': {'enhancement': 'genai', 'model': 'resnet50', 'xai': 'gradcam'}}
+

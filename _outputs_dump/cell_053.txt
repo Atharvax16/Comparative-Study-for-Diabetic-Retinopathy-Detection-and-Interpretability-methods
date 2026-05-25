@@ -1,0 +1,1296 @@
+### CELL 53  |  first line: # 3.2 Run XAI benchmark — for each (image, model, method, condition)
+================================================================================
+
+--- output[0] ---
+
+[gradcam | resnet50]
+
+--- output[1] ---
+gradcam/resnet50:   0%|          | 0/20 [00:00<?, ?it/s]
+
+--- output[2] ---
+
+[gradcam | efficientnet_b3]
+
+--- output[3] ---
+gradcam/efficientnet_b3:   0%|          | 0/20 [00:00<?, ?it/s]
+
+--- output[4] ---
+
+[shap | resnet50]
+
+--- output[5] ---
+shap/resnet50:   0%|          | 0/20 [00:00<?, ?it/s]
+
+--- output[6] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[7] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[8] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[9] ---
+/tmp/ipykernel_4384/1518898244.py:32: ConstantInputWarning: An input array is constant; the correlation coefficient is not defined.
+  rho, _ = spearmanr(h1.flatten(), h2.flatten())
+
+--- output[10] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[11] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[12] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[13] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[14] ---
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 3 iterations, i.e. alpha=1.172e-02, with an active set of 3 regressors, and the smallest cholesky pivot element being 7.300e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 5 iterations, i.e. alpha=6.938e-04, with an active set of 5 regressors, and the smallest cholesky pivot element being 2.220e-16. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 3 iterations, i.e. alpha=3.591e-03, with an active set of 3 regressors, and the smallest cholesky pivot element being 4.215e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 3 iterations, i.e. alpha=1.852e-03, with an active set of 3 regressors, and the smallest cholesky pivot element being 7.300e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+
+--- output[15] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[16] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[17] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[18] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[19] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[20] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[21] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[22] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[23] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[24] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[25] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[26] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[27] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[28] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[29] ---
+  skip clean: index 4 is out of bounds for axis 0 with size 1
+
+--- output[30] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[31] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[32] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[33] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[34] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[35] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[36] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[37] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[38] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[39] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[40] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[41] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[42] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[43] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[44] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[45] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[46] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[47] ---
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 8 iterations, i.e. alpha=1.561e-04, with an active set of 8 regressors, and the smallest cholesky pivot element being 2.980e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+
+--- output[48] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[49] ---
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 3 iterations, i.e. alpha=4.575e-04, with an active set of 3 regressors, and the smallest cholesky pivot element being 4.215e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 8 iterations, i.e. alpha=2.312e-04, with an active set of 7 regressors, and the smallest cholesky pivot element being 4.215e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+
+--- output[50] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[51] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[52] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[53] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[54] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[55] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[56] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[57] ---
+  skip clean: index 4 is out of bounds for axis 0 with size 1
+
+--- output[58] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[59] ---
+  skip clean: index 1 is out of bounds for axis 0 with size 1
+
+--- output[60] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[61] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[62] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[63] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[64] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[65] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[66] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[67] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[68] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[69] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[70] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[71] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[72] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[73] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[74] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[75] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[76] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[77] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[78] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[79] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[80] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[81] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[82] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[83] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[84] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[85] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[86] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[87] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[88] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[89] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[90] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[91] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[92] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[93] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[94] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[95] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[96] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[97] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[98] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[99] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[100] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[101] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[102] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[103] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[104] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[105] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[106] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[107] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[108] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[109] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[110] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[111] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[112] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[113] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[114] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[115] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[116] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[117] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[118] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[119] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[120] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[121] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[122] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[123] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[124] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[125] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[126] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[127] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[128] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[129] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[130] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[131] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[132] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[133] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[134] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[135] ---
+  skip clean: index 1 is out of bounds for axis 0 with size 1
+
+--- output[136] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[137] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+[shap | efficientnet_b3]
+
+--- output[138] ---
+shap/efficientnet_b3:   0%|          | 0/20 [00:00<?, ?it/s]
+
+--- output[139] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[140] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[141] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[142] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[143] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[144] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[145] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[146] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[147] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[148] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[149] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[150] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[151] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[152] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[153] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[154] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[155] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[156] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[157] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[158] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[159] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[160] ---
+  skip clean: index 4 is out of bounds for axis 0 with size 1
+
+--- output[161] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[162] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[163] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[164] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[165] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[166] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[167] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[168] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[169] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[170] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[171] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[172] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[173] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[174] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[175] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[176] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[177] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[178] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[179] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[180] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[181] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[182] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[183] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[184] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[185] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[186] ---
+  skip clean: index 4 is out of bounds for axis 0 with size 1
+
+--- output[187] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[188] ---
+  skip clean: index 1 is out of bounds for axis 0 with size 1
+
+--- output[189] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[190] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[191] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[192] ---
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 6 iterations, i.e. alpha=6.809e-04, with an active set of 6 regressors, and the smallest cholesky pivot element being 4.215e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 9 iterations, i.e. alpha=1.665e-03, with an active set of 9 regressors, and the smallest cholesky pivot element being 4.215e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 9 iterations, i.e. alpha=1.891e-03, with an active set of 9 regressors, and the smallest cholesky pivot element being 4.215e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+
+--- output[193] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[194] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[195] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[196] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[197] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[198] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[199] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[200] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[201] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[202] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[203] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[204] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[205] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[206] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[207] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[208] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[209] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[210] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[211] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[212] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[213] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[214] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[215] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[216] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[217] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[218] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[219] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[220] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[221] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[222] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[223] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[224] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[225] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[226] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[227] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[228] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[229] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[230] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[231] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[232] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[233] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[234] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[235] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[236] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[237] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[238] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[239] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[240] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[241] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[242] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[243] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[244] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[245] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[246] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[247] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[248] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[249] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[250] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[251] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[252] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[253] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[254] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[255] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[256] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[257] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[258] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[259] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[260] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[261] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[262] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[263] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[264] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[265] ---
+  skip clean: index 1 is out of bounds for axis 0 with size 1
+
+--- output[266] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[267] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+[shap | vit_base]
+
+--- output[268] ---
+shap/vit_base:   0%|          | 0/20 [00:00<?, ?it/s]
+
+--- output[269] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[270] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[271] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[272] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[273] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[274] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[275] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[276] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[277] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[278] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[279] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[280] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[281] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[282] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[283] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[284] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[285] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[286] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[287] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[288] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[289] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[290] ---
+  skip clean: index 4 is out of bounds for axis 0 with size 1
+
+--- output[291] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[292] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[293] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[294] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[295] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[296] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[297] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[298] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[299] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[300] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[301] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[302] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[303] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[304] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[305] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[306] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[307] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[308] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[309] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[310] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[311] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[312] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[313] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[314] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[315] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[316] ---
+  skip clean: index 4 is out of bounds for axis 0 with size 1
+
+--- output[317] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[318] ---
+  skip clean: index 1 is out of bounds for axis 0 with size 1
+
+--- output[319] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[320] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[321] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[322] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[323] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[324] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[325] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[326] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[327] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[328] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[329] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[330] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[331] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[332] ---
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 3 iterations, i.e. alpha=2.771e-03, with an active set of 3 regressors, and the smallest cholesky pivot element being 2.220e-16. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 5 iterations, i.e. alpha=1.385e-03, with an active set of 5 regressors, and the smallest cholesky pivot element being 2.107e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 5 iterations, i.e. alpha=1.385e-03, with an active set of 5 regressors, and the smallest cholesky pivot element being 4.215e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 4 iterations, i.e. alpha=1.040e-03, with an active set of 4 regressors, and the smallest cholesky pivot element being 2.107e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 5 iterations, i.e. alpha=7.277e-04, with an active set of 5 regressors, and the smallest cholesky pivot element being 2.220e-16. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+
+--- output[333] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[334] ---
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 4 iterations, i.e. alpha=1.614e-03, with an active set of 4 regressors, and the smallest cholesky pivot element being 2.220e-16. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 7 iterations, i.e. alpha=1.274e-03, with an active set of 7 regressors, and the smallest cholesky pivot element being 2.220e-16. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 4 iterations, i.e. alpha=1.247e-03, with an active set of 4 regressors, and the smallest cholesky pivot element being 2.220e-16. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+
+--- output[335] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[336] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[337] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[338] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[339] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[340] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[341] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[342] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[343] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[344] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[345] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[346] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[347] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[348] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[349] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[350] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[351] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[352] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[353] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[354] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[355] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[356] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[357] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[358] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[359] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[360] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[361] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[362] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[363] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[364] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[365] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[366] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[367] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[368] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[369] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[370] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[371] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[372] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[373] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[374] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[375] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[376] ---
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 2 iterations, i.e. alpha=8.842e-04, with an active set of 2 regressors, and the smallest cholesky pivot element being 4.215e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+
+--- output[377] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[378] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[379] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[380] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[381] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[382] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[383] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[384] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[385] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+--- output[386] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[387] ---
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 2 iterations, i.e. alpha=3.908e-03, with an active set of 2 regressors, and the smallest cholesky pivot element being 4.215e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 7 iterations, i.e. alpha=2.001e-04, with an active set of 7 regressors, and the smallest cholesky pivot element being 2.980e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 2 iterations, i.e. alpha=6.715e-04, with an active set of 2 regressors, and the smallest cholesky pivot element being 4.215e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 6 iterations, i.e. alpha=2.719e-04, with an active set of 6 regressors, and the smallest cholesky pivot element being 2.107e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/sklearn/linear_model/_least_angle.py:723: ConvergenceWarning: Regressors in active set degenerate. Dropping a regressor, after 2 iterations, i.e. alpha=1.935e-03, with an active set of 2 regressors, and the smallest cholesky pivot element being 4.215e-08. Reduce max_iter or increase eps parameters.
+  warnings.warn(
+
+--- output[388] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[389] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[390] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[391] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[392] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[393] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[394] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[395] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[396] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[397] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[398] ---
+  skip clean: index 1 is out of bounds for axis 0 with size 1
+
+--- output[399] ---
+  0%|          | 0/1 [00:00<?, ?it/s]
+
+--- output[400] ---
+  skip clean: index 2 is out of bounds for axis 0 with size 1
+
+[attention | vit_base]
+
+--- output[401] ---
+attention/vit_base:   0%|          | 0/20 [00:00<?, ?it/s]
+
+--- output[402] ---
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+  skip clean: 'MultiScaleClassifier' object has no attribute 'blocks'
+
+--- output[403] ---
+        id_code     model   method degradation level  deletion_auc  \
+0  d774692d9919  resnet50  gradcam       clean  none      0.476780   
+1  d774692d9919  resnet50  gradcam        blur   low      0.430321   
+2  d774692d9919  resnet50  gradcam        blur   mid      0.316626   
+3  d774692d9919  resnet50  gradcam        blur  high      0.261457   
+4  d774692d9919  resnet50  gradcam    exposure   low      0.518057   
+
+   insertion_auc  stability  iou  
+0       0.777118   1.000000  NaN  
+1       0.631725   0.324230  NaN  
+2       0.447862   0.160412  NaN  
+3       0.381098   0.050448  NaN  
+4       0.705673   0.634976  NaN  
+
