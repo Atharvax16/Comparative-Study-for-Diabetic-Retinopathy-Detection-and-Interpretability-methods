@@ -1,0 +1,637 @@
+================================================================================
+CLAUDE CODE MASTER PROMPT
+Thesis: Robust & Explainable AI for Diabetic Retinopathy
+================================================================================
+
+CONTEXT:
+You are working on a Google Colab notebook (Thesis_optimized_final_version1.ipynb,
+94 cells) for a thesis on robust and explainable DR classification. The full
+project state is documented in PROJECT_OVERVIEW.md — read it completely before
+making any changes. The notebook runs on Colab with A100/T4 GPU, uses PyTorch 2.x
++ timm, and all checkpoints persist to Google Drive at
+/content/drive/MyDrive/Thesis/checkpoints/.
+
+THE PROFESSOR'S DELIVERABLES (mandatory, these define what we must deliver):
+
+1. PHASE 3 EXTENSION — Add SHAP across all models (CNNs and ViT) plus metrics
+   for assessing SHAP explanation quality. Currently only Grad-CAM and
+   Integrated Gradients are implemented. The professor specifically asked for
+   SHAP, not IG as a substitute.
+
+2. PHASE 4 — Image restoration (not just enhancement):
+   a) Two GAN-based approaches (we have A-ESRGAN already; need one more —
+      add CycleGAN trained on our APTOS pristine vs degraded pairs)
+   b) One vanilla diffusion model (we have Cold Diffusion already, but the
+      professor wants a standard DDPM-style diffusion model, not Cold Diffusion
+      which uses a non-standard forward process)
+
+PRIORITY ENGINEERING FIXES (these must happen first, they affect everything):
+
+Fix 1: Remove undertrained distilled checkpoints that are silently breaking
+       the V4 ensemble (clean acc regressed from 0.814 to 0.725).
+Fix 2: Fix Cold Diffusion noise catastrophe (noise-high collapses by -32 pts).
+Fix 3: Fix the Phase 5 quality classifier over-rejection (0% correct routing).
+Fix 4: Remove phantom EyeQ filter that silently falls back.
+Fix 5: Either retrain SwinIR-GAN (8 epochs, adv_w=0.005) or drop it.
+
+================================================================================
+IMPLEMENTATION PLAN — EXECUTE IN THIS ORDER
+================================================================================
+
+STEP 1: ENGINEERING FIXES (do all of these before touching new features)
+─────────────────────────────────────────────────────────────────────────
+
+1a) Delete the undertrained distilled checkpoints:
+    - Remove resnet50_v3_distilled.pt and efficientnet_b3_v3_distilled.pt
+      from /content/drive/MyDrive/Thesis/checkpoints/
+    - The load_classifier_v3() function prefers *_v3_distilled.pt when present;
+      after deletion it falls back to *_v3_best.pt (fully trained).
+    - Re-run the V4 ensemble evaluation (cell 41) and record new numbers.
+
+1b) Remove the phantom EyeQ quality filter:
+    - In cells 11 and 17, the EyeQ join silently fails and falls back to
+      using all 2,930 APTOS images. Replace the filter_pristine function with:
+        pristine_df = aptos_df.copy()
+        print(f"Using full APTOS dataset: {len(pristine_df)} images")
+    - Remove all fallback logic and the "[warn]" message.
+    - Keep EyeQ loading code used later for Phase 5 quality classifier training.
+
+1c) Fix Cold Diffusion noise catastrophe:
+    - Current: 4 epochs, L1 loss still dropping at 0.0120.
+    - Change to 12-15 epochs with CosineAnnealingLR.
+    - Weight noise samples higher in training:
+        kind_probs = {'blur': 0.25, 'exposure': 0.25, 'noise': 0.50}
+    - If after retraining Cold Diffusion still collapses on noise-high
+      (accuracy drops vs raw), scope it to blur+exposure only and document
+      the failure as a known limitation.
+
+1d) Fix Phase 5 quality classifier:
+    - Run Q_CKPT on all clean APTOS test images.
+    - Extract softmax probabilities for good/usable/reject.
+    - Implement threshold calibration instead of argmax:
+        if p_good > threshold_good:       label = 'good'
+        elif p_usable > threshold_usable: label = 'usable'
+        else:                             label = 'reject'
+    - Tune thresholds so clean APTOS distribution is ~60:25:15
+      (good:usable:reject).
+    - Update QUALITY_POLICY in cell 80 with calibrated thresholds.
+
+1e) Decide on SwinIR-GAN:
+    - Try retraining: 8 epochs, adv_w=0.005, freeze discriminator after
+      epoch 4.
+    - If it still underperforms CLAHE on most slices after retraining,
+      remove it from ENHANCERS and all downstream evaluations.
+
+STEP 2: ADD SHAP FOR PHASE 3 (Professor's Deliverable #1)
+──────────────────────────────────────────────────────────
+
+Context: We currently have Grad-CAM (for CNNs) and Integrated Gradients
+(via Captum, replaced KernelSHAP because SHAP was too slow at 384px).
+The professor specifically wants SHAP. We need to make it work at 384px.
+
+2a) Implement SHAP with optimisations for 384px:
+    - Use shap.GradientExplainer (NOT KernelSHAP) — it's GPU-accelerated
+      and can handle 384px in ~3-5 seconds per image vs 30+ for KernelSHAP.
+    - Alternative: use shap.DeepExplainer for the CNN models and
+      shap.GradientExplainer for ViT.
+    - Implementation:
+
+    ```python
+    import shap
+
+    def shap_heatmap(model, img_tensor, device, n_samples=50):
+        """
+        Generate SHAP attribution heatmap using GradientExplainer.
+        Works for both CNN and ViT architectures at 384px.
+        
+        Args:
+            model: trained classifier (eval mode)
+            img_tensor: preprocessed image tensor [1, 3, 384, 384]
+            device: cuda/cpu
+            n_samples: number of background samples
+        Returns:
+            heatmap: numpy array [384, 384] normalised to [0, 1]
+        """
+        model.eval()
+        
+        # Create background distribution (small batch of training images)
+        # Cache this across calls for efficiency
+        background = get_shap_background(n_samples, device)  # [n, 3, 384, 384]
+        
+        explainer = shap.GradientExplainer(model, background)
+        shap_values = explainer.shap_values(img_tensor.to(device))
+        
+        # Get SHAP values for predicted class
+        pred_class = model(img_tensor.to(device)).argmax(dim=1).item()
+        
+        if isinstance(shap_values, list):
+            sv = shap_values[pred_class]  # [1, 3, 384, 384]
+        else:
+            sv = shap_values[0, pred_class]
+        
+        # Aggregate across channels: take absolute mean
+        heatmap = np.abs(sv.squeeze()).mean(axis=0)  # [384, 384]
+        
+        # Normalise to [0, 1]
+        heatmap = (heatmap - heatmap.min()) / (heatmap.max() - heatmap.min() + 1e-8)
+        
+        return heatmap
+
+    def get_shap_background(n_samples, device):
+        """
+        Get a small representative background set from training data.
+        Cache after first call.
+        """
+        global _shap_bg_cache
+        if '_shap_bg_cache' not in dir() or _shap_bg_cache is None:
+            # Load n_samples random training images with TFM_EVAL
+            indices = np.random.choice(len(train_dataset), n_samples, replace=False)
+            imgs = torch.stack([train_dataset[i][0] for i in indices])
+            _shap_bg_cache = imgs.to(device)
+        return _shap_bg_cache
+    ```
+
+2b) Add SHAP to the XAI benchmark loop:
+    - In the XAI evaluation cells (49-54 area), add 'shap' as a third
+      method alongside 'gradcam' and 'ig'/'attention_rollout'.
+    - Run SHAP on ALL three models (resnet50/ConvNeXt, efficientnet_b3/
+      EfficientNetV2-S, vit_base/CLIP-ViT). This is important — the
+      professor wants SHAP across both CNNs and ViT.
+    - For each (model, image, condition), compute:
+        - SHAP heatmap
+        - Stability (Spearman correlation between clean SHAP and degraded SHAP)
+        - Insertion AUC (using SHAP heatmap for pixel ordering)
+        - Deletion AUC (using SHAP heatmap for pixel ordering)
+
+2c) SHAP-specific quality metrics the professor asked for:
+    - **Faithfulness (Comprehensiveness)**: mask the top-k% SHAP-important
+      pixels and measure prediction drop. Compare across k = [10, 20, 30, 50]%.
+      Report the area under this curve.
+    - **Sufficiency**: keep ONLY the top-k% SHAP-important pixels, mask
+      everything else. Measure how much prediction is retained.
+      Faithfulness + Sufficiency together tell you if SHAP is pointing at
+      the right pixels.
+    - **Stability under degradation**: already computed as Spearman ρ
+      between clean and degraded SHAP heatmaps.
+    - **Consistency across models**: for the same image, compute the IoU
+      or Spearman correlation between SHAP heatmaps from different models.
+      If all three models highlight the same region, that's evidence the
+      explanation is clinically meaningful, not model-specific.
+    - **SHAP vs Grad-CAM agreement**: Spearman correlation between SHAP
+      heatmap and Grad-CAM heatmap on the same image/model. High agreement
+      means both methods converge on the same explanation.
+
+2d) Generate comparison visualisations:
+    - For 10 representative test images × clean + 3 degradation-high conditions:
+      Side-by-side grid showing [Original Image | Grad-CAM | SHAP | IG/Attention]
+      for each model. Save to Drive/Thesis/results/phase3_xai_benchmark/samples/.
+    - Summary table:
+      | Model | Method | Clean Stability | Blur-high Stab | Noise-high Stab |
+        Insertion AUC (clean) | Faithfulness (clean) |
+
+STEP 3: ADD CYCLEGAN FOR PHASE 4 (Professor's Deliverable #2a)
+──────────────────────────────────────────────────────────────
+
+Context: We have A-ESRGAN (GAN #1). Professor wants a second GAN-based
+approach. CycleGAN is ideal because it's proven for fundus enhancement
+and doesn't need paired data (though we have pairs from our synthetic
+degradation pipeline).
+
+3a) Implement CycleGAN for fundus restoration:
+
+    ```python
+    # Architecture: standard CycleGAN with CBAM attention in generators
+    # Domain A = degraded fundus images (from Phase 1 degradation pipeline)
+    # Domain B = clean APTOS pristine images
+    
+    import torch.nn as nn
+    import itertools
+    
+    class ResidualBlock(nn.Module):
+        def __init__(self, channels):
+            super().__init__()
+            self.block = nn.Sequential(
+                nn.Conv2d(channels, channels, 3, padding=1),
+                nn.InstanceNorm2d(channels),
+                nn.ReLU(inplace=True),
+                nn.Conv2d(channels, channels, 3, padding=1),
+                nn.InstanceNorm2d(channels),
+            )
+        def forward(self, x):
+            return x + self.block(x)
+
+    class CBAM(nn.Module):
+        """Convolutional Block Attention Module - preserves fundus texture"""
+        def __init__(self, channels, reduction=16):
+            super().__init__()
+            # Channel attention
+            self.avg_pool = nn.AdaptiveAvgPool2d(1)
+            self.max_pool = nn.AdaptiveMaxPool2d(1)
+            self.fc = nn.Sequential(
+                nn.Linear(channels, channels // reduction),
+                nn.ReLU(),
+                nn.Linear(channels // reduction, channels)
+            )
+            # Spatial attention
+            self.spatial = nn.Sequential(
+                nn.Conv2d(2, 1, kernel_size=7, padding=3),
+                nn.Sigmoid()
+            )
+        
+        def forward(self, x):
+            # Channel attention
+            avg_out = self.fc(self.avg_pool(x).flatten(1)).unsqueeze(-1).unsqueeze(-1)
+            max_out = self.fc(self.max_pool(x).flatten(1)).unsqueeze(-1).unsqueeze(-1)
+            channel_att = torch.sigmoid(avg_out + max_out)
+            x = x * channel_att
+            # Spatial attention
+            avg_out = x.mean(dim=1, keepdim=True)
+            max_out = x.max(dim=1, keepdim=True)[0]
+            spatial_att = self.spatial(torch.cat([avg_out, max_out], dim=1))
+            return x * spatial_att
+
+    class CycleGenerator(nn.Module):
+        """Generator with 9 residual blocks + CBAM attention"""
+        def __init__(self, in_ch=3, out_ch=3, ngf=64, n_blocks=9):
+            super().__init__()
+            # Encoder
+            self.encoder = nn.Sequential(
+                nn.Conv2d(in_ch, ngf, 7, padding=3),
+                nn.InstanceNorm2d(ngf), nn.ReLU(True),
+                nn.Conv2d(ngf, ngf*2, 3, stride=2, padding=1),
+                nn.InstanceNorm2d(ngf*2), nn.ReLU(True),
+                nn.Conv2d(ngf*2, ngf*4, 3, stride=2, padding=1),
+                nn.InstanceNorm2d(ngf*4), nn.ReLU(True),
+            )
+            # Residual blocks with CBAM
+            res_blocks = []
+            for _ in range(n_blocks):
+                res_blocks.append(ResidualBlock(ngf*4))
+                res_blocks.append(CBAM(ngf*4))
+            self.res_blocks = nn.Sequential(*res_blocks)
+            # Decoder
+            self.decoder = nn.Sequential(
+                nn.ConvTranspose2d(ngf*4, ngf*2, 3, stride=2, padding=1, output_padding=1),
+                nn.InstanceNorm2d(ngf*2), nn.ReLU(True),
+                nn.ConvTranspose2d(ngf*2, ngf, 3, stride=2, padding=1, output_padding=1),
+                nn.InstanceNorm2d(ngf), nn.ReLU(True),
+                nn.Conv2d(ngf, out_ch, 7, padding=3),
+                nn.Tanh()
+            )
+        def forward(self, x):
+            return self.decoder(self.res_blocks(self.encoder(x)))
+
+    class PatchDiscriminator(nn.Module):
+        """70x70 PatchGAN discriminator"""
+        def __init__(self, in_ch=3, ndf=64):
+            super().__init__()
+            self.model = nn.Sequential(
+                nn.Conv2d(in_ch, ndf, 4, stride=2, padding=1),
+                nn.LeakyReLU(0.2, True),
+                nn.Conv2d(ndf, ndf*2, 4, stride=2, padding=1),
+                nn.InstanceNorm2d(ndf*2), nn.LeakyReLU(0.2, True),
+                nn.Conv2d(ndf*2, ndf*4, 4, stride=2, padding=1),
+                nn.InstanceNorm2d(ndf*4), nn.LeakyReLU(0.2, True),
+                nn.Conv2d(ndf*4, 1, 4, padding=1)
+            )
+        def forward(self, x):
+            return self.model(x)
+    ```
+
+3b) Training setup:
+    - Domain A: randomly sample degraded images from /content/data/degraded/
+      (all kinds and levels mixed — the generator should learn to handle
+      any degradation type).
+    - Domain B: clean APTOS pristine images.
+    - Loss: cycle consistency (L1, lambda=10) + adversarial (MSE) +
+      identity loss (L1, lambda=5).
+    - Train for 50 epochs, batch size 4, image size 256x256.
+    - AdamW, lr=2e-4 for first 25 epochs, linear decay to 0 for last 25.
+    - Save checkpoint: cyclegan_v1.pt
+    - Resume guard: if cyclegan_v1.pt exists on Drive, skip training.
+
+3c) Enhancement function:
+    ```python
+    def enhance_cyclegan(img_np, G_BA, device):
+        """Restore a degraded fundus image using trained CycleGAN generator"""
+        # img_np: [H, W, 3] uint8
+        # G_BA: generator from domain A (degraded) to domain B (clean)
+        tensor = TFM_EVAL(Image.fromarray(img_np)).unsqueeze(0).to(device)
+        with torch.no_grad():
+            restored = G_BA(tensor)
+        restored = restored.squeeze().cpu().numpy().transpose(1, 2, 0)
+        restored = np.clip((restored * 0.5 + 0.5) * 255, 0, 255).astype(np.uint8)
+        return restored
+    ```
+
+3d) Add 'cyclegan' to ENHANCERS list in cell 72 and re-run Phase 4 evaluation.
+
+STEP 4: ADD VANILLA DIFFUSION MODEL FOR PHASE 4 (Professor's Deliverable #2b)
+──────────────────────────────────────────────────────────────────────────────
+
+Context: We have Cold Diffusion (non-standard forward process using our
+synthetic degradation operators). Professor wants a standard/vanilla
+diffusion model (DDPM-style with Gaussian noise forward process).
+
+4a) Implement a lightweight conditional DDPM for fundus restoration:
+
+    ```python
+    import math
+    
+    class SinusoidalPE(nn.Module):
+        """Sinusoidal positional embedding for diffusion timestep"""
+        def __init__(self, dim):
+            super().__init__()
+            self.dim = dim
+        def forward(self, t):
+            half = self.dim // 2
+            emb = math.log(10000) / (half - 1)
+            emb = torch.exp(torch.arange(half, device=t.device) * -emb)
+            emb = t[:, None].float() * emb[None, :]
+            return torch.cat([emb.sin(), emb.cos()], dim=-1)
+
+    class ConditionalUNet(nn.Module):
+        """
+        U-Net conditioned on:
+        - timestep t (via sinusoidal embedding + FiLM)
+        - degraded image (concatenated to input)
+        
+        Input: [noisy_clean, degraded] concatenated = 6 channels
+        Output: predicted noise (3 channels)
+        """
+        def __init__(self, in_ch=6, out_ch=3, base_ch=64, time_dim=256):
+            super().__init__()
+            self.time_mlp = nn.Sequential(
+                SinusoidalPE(time_dim),
+                nn.Linear(time_dim, time_dim),
+                nn.GELU(),
+                nn.Linear(time_dim, time_dim),
+            )
+            # Encoder
+            self.enc1 = self._block(in_ch, base_ch)
+            self.enc2 = self._block(base_ch, base_ch * 2)
+            self.enc3 = self._block(base_ch * 2, base_ch * 4)
+            # Bottleneck
+            self.mid = self._block(base_ch * 4, base_ch * 4)
+            # FiLM modulation at bottleneck
+            self.film = nn.Linear(time_dim, base_ch * 4 * 2)  # scale + shift
+            # Decoder
+            self.dec3 = self._block(base_ch * 8, base_ch * 2)  # skip connection doubles channels
+            self.dec2 = self._block(base_ch * 4, base_ch)
+            self.dec1 = self._block(base_ch * 2, base_ch)
+            self.final = nn.Conv2d(base_ch, out_ch, 1)
+            # Pooling and upsampling
+            self.pool = nn.MaxPool2d(2)
+            self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
+
+        def _block(self, in_c, out_c):
+            return nn.Sequential(
+                nn.Conv2d(in_c, out_c, 3, padding=1),
+                nn.GroupNorm(8, out_c),
+                nn.GELU(),
+                nn.Conv2d(out_c, out_c, 3, padding=1),
+                nn.GroupNorm(8, out_c),
+                nn.GELU(),
+            )
+
+        def forward(self, x, t):
+            # x: [B, 6, H, W] = concat(noisy_clean, degraded)
+            # t: [B] timestep indices
+            t_emb = self.time_mlp(t)
+            
+            e1 = self.enc1(x)
+            e2 = self.enc2(self.pool(e1))
+            e3 = self.enc3(self.pool(e2))
+            
+            m = self.mid(self.pool(e3))
+            # FiLM modulation
+            film_params = self.film(t_emb).unsqueeze(-1).unsqueeze(-1)
+            scale, shift = film_params.chunk(2, dim=1)
+            m = m * (1 + scale) + shift
+            
+            d3 = self.dec3(torch.cat([self.up(m), e3], dim=1))
+            d2 = self.dec2(torch.cat([self.up(d3), e2], dim=1))
+            d1 = self.dec1(torch.cat([self.up(d2), e1], dim=1))
+            return self.final(d1)
+
+    class FundusDDPM:
+        """
+        Standard DDPM (Ho et al. 2020) conditioned on degraded input.
+        Forward process: add Gaussian noise to clean image.
+        Reverse process: predict and remove noise, conditioned on degraded image.
+        """
+        def __init__(self, model, T=1000, beta_start=1e-4, beta_end=0.02, device='cuda'):
+            self.model = model
+            self.T = T
+            self.device = device
+            
+            # Linear noise schedule
+            self.betas = torch.linspace(beta_start, beta_end, T).to(device)
+            self.alphas = 1.0 - self.betas
+            self.alpha_cumprod = torch.cumprod(self.alphas, dim=0)
+            self.sqrt_alpha_cumprod = torch.sqrt(self.alpha_cumprod)
+            self.sqrt_one_minus_alpha_cumprod = torch.sqrt(1 - self.alpha_cumprod)
+        
+        def q_sample(self, x0, t, noise=None):
+            """Forward process: add noise to clean image at timestep t"""
+            if noise is None:
+                noise = torch.randn_like(x0)
+            sqrt_acp = self.sqrt_alpha_cumprod[t].view(-1, 1, 1, 1)
+            sqrt_omacp = self.sqrt_one_minus_alpha_cumprod[t].view(-1, 1, 1, 1)
+            return sqrt_acp * x0 + sqrt_omacp * noise, noise
+        
+        def train_step(self, clean, degraded, optimizer):
+            """One training step: predict noise from noisy clean + degraded condition"""
+            B = clean.size(0)
+            t = torch.randint(0, self.T, (B,), device=self.device)
+            noise = torch.randn_like(clean)
+            noisy_clean, _ = self.q_sample(clean, t, noise)
+            
+            # Concatenate noisy clean with degraded as condition
+            model_input = torch.cat([noisy_clean, degraded], dim=1)  # [B, 6, H, W]
+            predicted_noise = self.model(model_input, t)
+            
+            loss = nn.functional.mse_loss(predicted_noise, noise)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            return loss.item()
+        
+        @torch.no_grad()
+        def restore(self, degraded, n_steps=50):
+            """
+            Restore a degraded image using DDIM-style fast sampling.
+            Start from pure noise, denoise conditioned on the degraded input.
+            """
+            B = degraded.size(0)
+            # Start from noise
+            x = torch.randn(B, 3, degraded.size(2), degraded.size(3), device=self.device)
+            
+            # DDIM-style: skip timesteps for faster inference
+            step_size = self.T // n_steps
+            timesteps = list(range(self.T - 1, 0, -step_size))
+            
+            for t_val in timesteps:
+                t = torch.full((B,), t_val, device=self.device, dtype=torch.long)
+                model_input = torch.cat([x, degraded], dim=1)
+                pred_noise = self.model(model_input, t)
+                
+                alpha = self.alphas[t_val]
+                alpha_cumprod = self.alpha_cumprod[t_val]
+                beta = self.betas[t_val]
+                
+                # DDPM reverse step
+                x = (1 / torch.sqrt(alpha)) * (
+                    x - (beta / torch.sqrt(1 - alpha_cumprod)) * pred_noise
+                )
+                
+                # Add noise (except at t=0)
+                if t_val > 1:
+                    noise = torch.randn_like(x)
+                    x = x + torch.sqrt(beta) * noise
+            
+            return x.clamp(-1, 1)
+    ```
+
+4b) Training setup:
+    - Pairs: (degraded, clean) from Phase 1 degradation pipeline.
+      For each clean APTOS image, randomly pick a (kind, level) and
+      apply the degradation to create the pair.
+    - Image size: 256x256 (same as Cold Diffusion).
+    - T=1000 timesteps, linear beta schedule.
+    - Train for 15 epochs, batch size 8, AdamW lr=1e-4.
+    - Use GradScaler for mixed precision (AMP).
+    - Save checkpoint: ddpm_fundus_v1.pt
+    - Resume guard following the same pattern as other cells.
+
+4c) Enhancement function:
+    ```python
+    def enhance_ddpm(img_np, ddpm, device, n_steps=50):
+        """Restore a degraded fundus image using conditional DDPM"""
+        tensor = TFM_EVAL(Image.fromarray(img_np)).unsqueeze(0).to(device)
+        restored = ddpm.restore(tensor, n_steps=n_steps)
+        restored = restored.squeeze().cpu().numpy().transpose(1, 2, 0)
+        restored = np.clip((restored * 0.5 + 0.5) * 255, 0, 255).astype(np.uint8)
+        return restored
+    ```
+
+4d) Add 'ddpm' to ENHANCERS list and re-run Phase 4 evaluation.
+
+STEP 5: REGENERATE ALL RESULTS
+──────────────────────────────
+
+After Steps 1-4, do a clean re-run of the full evaluation pipeline:
+
+5a) Phase 2: Re-run V4 ensemble evaluation (cell 41) with corrected
+    checkpoints. Generate per-class confusion matrices and
+    classification_report for all models on clean test data.
+
+5b) Phase 3: Re-run XAI benchmark with SHAP added alongside Grad-CAM
+    and IG/Attention Rollout. Generate:
+    - Stability table: Model × Method × Condition
+    - Insertion/Deletion AUC table
+    - SHAP quality metrics (faithfulness, sufficiency, cross-model consistency)
+    - Visualisation grids: 10 images × 4 conditions × 3 methods × 3 models
+
+5c) Phase 4: Re-run recovery evaluation with updated ENHANCERS list:
+    ['clahe', 'genai' (A-ESRGAN), 'cold_diff', 'cyclegan', 'ddpm']
+    (+ 'swinir_gan' if retained after Step 1e)
+    Generate recovery accuracy tables and plots for all combinations.
+
+5d) Phase 4 XAI recovery: Re-run SHAP + Grad-CAM + IG on enhanced images.
+    This is the post-restoration XAI verification — does restoration
+    recover the explanation?
+
+5e) Phase 5: Re-run routing evaluation with calibrated quality classifier.
+    Verify that clean routing accuracy is now > 60% (was 0%).
+
+5f) Save ALL results to Drive/Thesis/results/ with updated CSVs and plots.
+
+STEP 6: ADD MISSING DIAGNOSTICS
+────────────────────────────────
+
+6a) Per-class precision/recall/F1 for the V4 ensemble (clean + degraded):
+    ```python
+    from sklearn.metrics import classification_report, confusion_matrix
+    import seaborn as sns
+    
+    target_names = ['No DR', 'Mild', 'Moderate', 'Severe', 'Proliferative']
+    print(classification_report(y_true, y_pred, target_names=target_names))
+    
+    cm = confusion_matrix(y_true, y_pred)
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', xticklabels=target_names,
+                yticklabels=target_names, cmap='Blues')
+    plt.title('V4 Ensemble - Clean Test Set')
+    plt.ylabel('True Label')
+    plt.xlabel('Predicted Label')
+    plt.tight_layout()
+    plt.savefig('Drive/Thesis/results/phase2/confusion_v4_ensemble_clean.png', dpi=150)
+    ```
+
+6b) Failure-mode analysis: per-image table of raw_pred vs enhanced_pred,
+    grouped by true class, showing which classes benefit most from
+    restoration and which are harmed.
+
+================================================================================
+CRITICAL IMPLEMENTATION NOTES
+================================================================================
+
+1. ALL new cells must have resume guards. Pattern:
+     CKPT = Path('/content/drive/MyDrive/Thesis/checkpoints/model_name.pt')
+     if CKPT.exists():
+         model.load_state_dict(torch.load(CKPT, map_location=device))
+         print(f'[RESUME GUARD] Loaded {CKPT.name}')
+     else:
+         # training code here
+         torch.save(model.state_dict(), CKPT)
+
+2. Image size consistency: V3 classifiers expect 384px. Restoration
+   models work at 256px. The enhancement pipeline must resize:
+   input (any size) → 256px for restoration → 384px for classification.
+
+3. Memory management: SHAP's GradientExplainer holds background samples
+   in GPU memory. Use n_samples=50, not 200. Call torch.cuda.empty_cache()
+   between models when running the XAI benchmark.
+
+4. The ENHANCERS list in cell 72 must be updated to include the new
+   methods. Final list should be:
+     ENHANCERS = ['clahe', 'genai', 'cold_diff', 'cyclegan', 'ddpm']
+
+5. All plots should include the new methods. Update legend labels:
+     'clahe' → 'CLAHE'
+     'genai' → 'A-ESRGAN'
+     'cold_diff' → 'Cold Diffusion'
+     'cyclegan' → 'CycleGAN-CBAM'
+     'ddpm' → 'DDPM (Vanilla)'
+
+6. The Phase 4 V6 scoping decision (no restoration at high severity)
+   should still apply. CycleGAN and DDPM are evaluated at low+mid only;
+   high is shown as "ungradable" in plots.
+
+================================================================================
+EXPECTED OUTCOMES AFTER ALL STEPS
+================================================================================
+
+Phase 2 (after fix):
+  V4 ensemble clean accuracy: 0.78-0.82 (up from 0.725)
+  V4 ensemble clean kappa:    0.86-0.89 (up from 0.836)
+
+Phase 3 (after SHAP addition):
+  3 XAI methods (Grad-CAM, SHAP, IG/Attention) × 3 models × 10 conditions
+  SHAP quality metrics quantified and compared across architectures
+  Key finding: SHAP on ViT should show higher stability than SHAP on CNNs
+
+Phase 4 (after CycleGAN + DDPM):
+  5 restoration methods compared: CLAHE, A-ESRGAN, Cold Diffusion, CycleGAN, DDPM
+  "No universal restorer" finding should strengthen with more methods
+  CycleGAN expected to be competitive on blur (unpaired translation handles it well)
+  DDPM expected to handle noise better than Cold Diffusion
+
+Phase 5 (after quality classifier fix):
+  Clean routing accuracy: > 60% (up from ~0%)
+  Trust scores correctly ordering: clean > usable > reject
+
+================================================================================
+END OF PROMPT
+================================================================================
