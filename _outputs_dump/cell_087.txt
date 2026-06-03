@@ -1,6 +1,0 @@
-### CELL 87  |  first line: # How often does the quality classifier say 'reject' on test images we know are clean?
-================================================================================
-
---- output[0] ---
-Counter({'reject': 100})
-

@@ -1,9 +1,0 @@
-### CELL 56  |  first line: import matplotlib.pyplot as plt
-================================================================================
-
---- output[0] ---
-<Figure size 1300x960 with 12 Axes>
-
---- output[1] ---
-Saved: /content/drive/MyDrive/Thesis/results/phase3_xai_benchmark/samples/qualitative_d774692d9919.png
-

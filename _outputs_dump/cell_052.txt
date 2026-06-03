@@ -1,6 +1,0 @@
-### CELL 52  |  first line: print(METHOD_REGISTRY['shap']['fn'].__name__)   # must print 'ig_heatmap'
-================================================================================
-
---- output[0] ---
-ig_heatmap
-

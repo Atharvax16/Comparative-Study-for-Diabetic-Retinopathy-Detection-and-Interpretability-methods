@@ -1,6 +1,0 @@
-### CELL 68  |  first line:   from PIL import Image
-================================================================================
-
---- output[0] ---
-<Figure size 1200x400 with 3 Axes>
-

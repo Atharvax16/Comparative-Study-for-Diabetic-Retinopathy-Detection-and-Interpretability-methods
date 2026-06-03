@@ -1,6 +1,0 @@
-### CELL 35  |  first line: class MultiScaleClassifier(nn.Module):
-================================================================================
-
---- output[0] ---
-MultiScaleClassifier ready (with gradcam_target Identity hook).
-

@@ -1,7 +1,0 @@
-### CELL 48  |  first line: USE_V3 = True
-================================================================================
-
---- output[0] ---
-[adapter] Phase 3-5 will use V3 multi-scale classifiers @384.
-Adapter installed.
-

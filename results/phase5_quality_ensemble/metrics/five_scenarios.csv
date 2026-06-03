@@ -1,0 +1,4 @@
+scenario,id_code,condition,quality_pred,route_model,route_enhancement,pred,true,conf,insertion_auc,trust
+restoration_save,e4b0df29b96f,noise,reject,resnet50,genai,0,0,0.69,0.643,0.667
+mis_routing_lucky,e4b0df29b96f,clean,reject,resnet50,genai,0,0,0.778,0.75,0.764
+pipeline_failure,1e4b3b823b95,clean,reject,resnet50,genai,1,2,0.337,0.342,0.339

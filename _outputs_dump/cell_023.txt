@@ -1,7 +1,0 @@
-### CELL 23  |  first line: import shutil
-================================================================================
-
---- output[0] ---
-Filesystem      Size  Used Avail Use% Mounted on
-overlay         236G  145G   91G  62% /
-

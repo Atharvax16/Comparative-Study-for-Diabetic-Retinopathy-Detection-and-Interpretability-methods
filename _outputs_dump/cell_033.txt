@@ -1,9 +1,0 @@
-### CELL 33  |  first line: # Ben Graham fundus preprocessing — circle-crop + local-mean subtraction
-================================================================================
-
---- output[0] ---
-<Figure size 800x400 with 2 Axes>
-
---- output[1] ---
-Ben Graham preprocessor ready.
-

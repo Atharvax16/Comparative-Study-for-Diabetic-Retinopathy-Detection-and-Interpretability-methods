@@ -1,0 +1,30 @@
+# --- Data & model weights (never commit; pulled from Drive/Kaggle) ---
+data/
+*.zip
+*.tar
+*.tar.gz
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+
+# --- Heavy per-image qualitative dumps (keep metrics + plots only) ---
+results/**/samples/
+results/**/logs/
+
+# --- Notebook / Python cruft ---
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+.virtual_documents/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- Local scratch ---
+_stage/
+*.bak
+*.bak[0-9]

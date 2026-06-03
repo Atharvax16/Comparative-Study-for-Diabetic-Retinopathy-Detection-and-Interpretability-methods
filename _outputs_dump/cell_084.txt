@@ -1,9 +1,0 @@
-### CELL 84  |  first line: # 5.6 Plots
-================================================================================
-
---- output[0] ---
-<Figure size 700x400 with 1 Axes>
-
---- output[1] ---
-<Figure size 500x400 with 2 Axes>
-

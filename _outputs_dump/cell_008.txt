@@ -1,9 +1,0 @@
-### CELL 8  |  first line: import torch
-================================================================================
-
---- output[0] ---
-APTOS csv   : /content/data/aptos/train_1.csv
-APTOS images: /content/data/aptos/train_images
-EyeQ csv    : /content/data/eyeq/Label_EyeQ_test.csv
-Device      : cuda
-

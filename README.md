@@ -1,193 +1,138 @@
 # Robust and Explainable AI for Diabetic Retinopathy
 
-A dissertation project investigating the robustness and interpretability of deep-learning models for Diabetic Retinopathy (DR) detection under varying image-quality conditions, with a focus on Generative-AI image restoration as a recovery mechanism.
+> A comparative study of how **diagnostic accuracy** *and* **model explanations** behave when retinal fundus images degrade — and whether GenAI restoration can bring them back.
 
-> **Goal.** Build a DR-screening pipeline that maintains high diagnostic accuracy *and* trustworthy explanations even when input fundus photographs are blurred, under-exposed, or noisy — and that can transparently route low-quality images through a GenAI restoration step before classification.
+Deep-learning models grade diabetic retinopathy (DR) at 84–89% accuracy on *clean* benchmark images. But 15–30% of real-world screening images are blurry, mis-exposed, or noisy. This dissertation systematically measures what happens to both the **prediction** and its **visual explanation** under controlled degradation, then asks whether generative restoration actually helps.
 
----
-
-## Research Questions
-
-| RQ | Question |
-| -- | -------- |
-| **RQ1** | How do Vision Transformers (ViT-Base) compare to CNNs (ResNet-50, EfficientNet-B3) under varying levels of synthetic image degradation (blur, exposure, noise)? |
-| **RQ2** | To what extent does the fidelity and stability of explainability methods (Grad-CAM, SHAP, Self-Attention) degrade under different image-quality conditions? |
-| **RQ3** | Can GenAI-based quality enhancement (e.g. diffusion / Swin2SR) significantly recover both diagnostic accuracy and XAI localization precision compared to a CLAHE baseline? |
-| **RQ4** | Can a quality-aware ensemble framework dynamically pick the optimal enhancement-model-XAI combination to maximize clinical trust in real-world DR screening? |
+The central, under-reported finding: **explanations drift faster than accuracy, and image restoration that improves pixel fidelity does *not* improve — and often harms — the downstream diagnosis.**
 
 ---
 
-## Methodology — Five Phases
+## Research questions
+
+| RQ | Question | Phase |
+|----|----------|-------|
+| **RQ1** | How do Vision Transformers compare to CNNs (ResNet-50, EfficientNet-B3) across increasing image degradation? | 2 |
+| **RQ2** | Do explainability methods (Grad-CAM, SHAP, Attention Rollout) stay faithful and stable as quality drops? | 3 |
+| **RQ3** | Can GenAI restoration recover both diagnostic accuracy **and** explanation localisation vs a CLAHE baseline? | 4 |
+| **RQ4** | Can a quality-aware ensemble route each image to the optimal pipeline and produce a clinical trust score? | 5 |
+
+---
+
+## Pipeline
 
 ```
 APTOS 2019 + EyeQ
-        |
-   [Phase 1] Quality filter -> pristine subset -> 9 synthetic degradations
-        |
-   [Phase 2] Train ResNet-50 / EfficientNet-B3 / ViT-Base, stress-test on degraded sets        -> RQ1
-        |
-   [Phase 3] Grad-CAM (CNNs) / SHAP (all) / Attention rollout (ViT)
-            + Faithfulness (Deletion/Insertion AUC), Stability (Spearman), Localization (IoU)  -> RQ2
-        |
-   [Phase 4] CLAHE baseline + GenAI restoration (Swin2SR)
-            -> re-evaluate accuracy + XAI fidelity                                              -> RQ3
-        |
-   [Phase 5] EyeQ-trained quality classifier -> dynamic routing -> Clinical Trust Score        -> RQ4
+   │
+   ├─ Phase 1  Data engineering — pristine subset → 9 synthetic degradations (blur/exposure/noise × 3 levels)
+   ├─ Phase 2  Train ResNet-50 / EfficientNet-B3 / ViT-Base → stress-test on every degradation      → RQ1
+   ├─ Phase 3  Grad-CAM / SHAP / Attention Rollout → stability (SSIM), insertion & deletion AUC      → RQ2
+   ├─ Phase 4  CLAHE · A-ESRGAN · SwinIR+GAN · Cold Diffusion · pathology-preserving DDPM
+   │           → re-evaluate accuracy + explanation recovery                                          → RQ3
+   └─ Phase 5  EyeQ quality classifier (good/usable/reject) → routing → clinical trust score          → RQ4
 ```
-
-Each phase writes its outputs to a separate directory so results can be presented in isolation.
 
 ---
 
-## Repository Structure
+## Key results
+
+**RQ1 — ViTs are dramatically more robust.** Under severe noise, ViT retains ~62% accuracy while EfficientNet collapses to ~20% — a gap invisible on clean benchmarks.
+
+![Accuracy vs degradation](results/phase2_model_benchmarking/plots/accuracy_vs_degradation_noise.png)
+
+**RQ2 — Explanations degrade faster than accuracy.** Grad-CAM/SHAP stability falls toward zero (even negative) under noise while accuracy is still ~50% — a model can be right for the wrong reasons.
+
+![Explanation stability vs noise](results/phase3_xai_benchmark/plots/stability_vs_noise.png)
+
+**RQ3 — Pixel fidelity ↑ does *not* imply diagnosis ↑.** The restorer with the largest PSNR gain (Cold Diffusion, +12 dB on exposure) still *loses* downstream accuracy. No restorer beats "do nothing."
+
+![Fidelity vs accuracy](results/phase4b_restoration_proof/plots/fidelity_vs_accuracy.png)
+
+**Why?** Pushing *clean* images through each restorer and re-classifying isolates the cause: the restorer's output is **out-of-distribution** for the classifier (over-smoothing / re-texturing), independent of any real degradation. A-ESRGAN is the safest; Cold Diffusion and vanilla DDPM are harmful.
+
+![Distribution shift](results/phase4b_restoration_proof/plots/distribution_shift.png)
+
+**Diffusion process — forward noising / reverse denoising:**
+
+| Conditional DDPM | Cold Diffusion |
+|---|---|
+| ![DDPM](results/phase4b_restoration_proof/plots/ddpm_forward_backward.png) | ![Cold Diffusion](results/phase4b_restoration_proof/plots/cold_diffusion_forward_backward.png) |
+
+**Takeaway for RQ4:** the quality gate's real job is **triage** — send `reject` images for re-acquisition and pass good/usable images straight to the strongest classifier — rather than restore-everything.
+
+---
+
+## Repository structure
 
 ```
 .
-├── Thesis.ipynb                                          # consolidated single-notebook version (run end-to-end)
 ├── notebooks/
-│   ├── 00_setup.ipynb                                    # Drive mount, dataset extraction, deps
-│   ├── 01_phase1_data_engineering.ipynb                  # quality filter + synthetic degradation
-│   ├── 02_phase2_model_benchmarking.ipynb                # train + stress-test all three models
-│   ├── 03_phase3_xai_benchmark.ipynb                     # XAI methods + faithfulness/stability metrics
-│   ├── 04_phase4_genai_enhancement.ipynb                 # CLAHE + GenAI restoration + recovery analysis
-│   └── 05_phase5_quality_aware_ensemble.ipynb            # routed pipeline + clinical trust score
-├── results/                                              # gitignored in practice — see "Outputs"
-│   ├── phase1_data_engineering/{metrics,plots,samples}/
-│   ├── phase2_model_benchmarking/{metrics,plots}/
-│   ├── phase3_xai_benchmark/{metrics,plots,samples}/
-│   ├── phase4_genai_enhancement/{metrics,plots,samples}/
-│   └── phase5_quality_ensemble/{metrics,plots,samples}/
-├── Project_Master_Overview_Robust_and_Explainable_AI_for_Diabetic_Retinopathy.pdf
-├── thesis.webp                                           # pipeline diagram (also shown above)
+│   ├── Thesis_optimized_final_version3.ipynb   # full pipeline, Phases 1–5 (train from scratch)
+│   ├── Thesis_v3_resume_DDPM_to_Phase5.ipynb   # resume run using saved Drive checkpoints
+│   └── Thesis_v3_restoration_proof.ipynb       # RQ3 evidence: fidelity-vs-accuracy, distribution shift, diffusion figures
+├── results/                                    # metrics (CSV/JSON) + headline plots, per phase
+│   └── phase4b_restoration_proof/              # restoration-proof outputs
+├── docs/                                       # project overview, paper architecture, observations, PDFs
+├── .gitignore
 └── README.md
 ```
+
+> Large artifacts (`data/`, `checkpoints/`, per-image `samples/`) are intentionally **not** tracked — see `.gitignore`. Only metrics and headline plots are committed. Committed notebooks have their outputs stripped so they render on GitHub; the generated figures live in `results/`.
 
 ---
 
 ## Datasets
 
-This repository does **not** ship the data. Download from the original sources and zip them as `Thesis.zip` containing `APTOS.zip` and `EYEQ.zip` inside.
+This repository does **not** ship the data.
 
 | Dataset | Used for | Source |
-| ------- | -------- | ------ |
-| APTOS 2019 Blindness Detection | Primary classification task (5 grades of DR severity) | Kaggle competition |
-| EyeQ | Per-image quality labels (good / usable / reject) for Phase 1 filtering and Phase 5 routing | Public release on GitHub |
+|---------|----------|--------|
+| APTOS 2019 Blindness Detection | 5-grade DR classification | Kaggle competition |
+| EyeQ | Per-image quality labels (good / usable / reject) for Phase 5 routing | Public GitHub release |
 
-Expected on Drive:
+Expected on Drive (`MyDrive/Thesis/`), with nested zips auto-detected and extracted to `/content/data/` on Colab:
 ```
-MyDrive/Thesis/Thesis.zip          # outer container
-   APTOS.zip                       # inner — APTOS images + train.csv
-   EYEQ.zip                        # inner — EyeQ images + quality CSV
-```
-The setup notebook auto-detects nested zips and extracts everything to `/content/data/` on Colab local disk.
-
----
-
-## Setup (Google Colab)
-
-1. **Upload the data**: place `Thesis.zip` in `MyDrive/Thesis/` on Google Drive.
-2. **Open** `Thesis.ipynb` (or, if you prefer per-phase notebooks, the `notebooks/` folder).
-3. **Choose runtime** with GPU enabled — A100 recommended; T4 works but Phase 2 training takes longer.
-4. Run the **setup section** once. It mounts Drive, installs dependencies, extracts the zips, and creates the per-phase results directories.
-
-The notebook installs the following at runtime:
-```
-torch, torchvision, timm, captum, shap, grad-cam,
-scikit-image, opencv-python-headless, tabulate,
-diffusers, transformers, accelerate, optuna
+MyDrive/Thesis/Thesis.zip
+   ├── APTOS.zip     # APTOS images + train.csv
+   └── EYEQ.zip      # EyeQ images + quality CSV
 ```
 
-No local Python environment is required — everything runs in Colab.
+---
+
+## Running (Google Colab)
+
+1. Open a notebook from `notebooks/` in Colab and select a GPU runtime (A100 recommended; T4 works).
+2. Mount Drive and place the datasets as above.
+3. **First full run:** `Thesis_optimized_final_version3.ipynb` trains everything and writes checkpoints to `MyDrive/Thesis/checkpoints/`.
+4. **Subsequent runs:** `Thesis_v3_resume_DDPM_to_Phase5.ipynb` reloads those checkpoints (`[RESUME]` guards skip retraining).
+5. **Restoration proof:** run `Thesis_v3_restoration_proof.ipynb` after a resume run; it reuses checkpoints and writes to `results/phase4b_restoration_proof/`.
+
+Runtime installs: `torch, torchvision, timm, captum, shap, grad-cam, scikit-image, opencv-python-headless, tabulate, diffusers, transformers, accelerate, optuna`.
 
 ---
 
-## Usage
+## Documentation
 
-### Single-notebook workflow (recommended)
-Open `Thesis.ipynb` and run cells top to bottom. Each phase section writes its own results and is independent within a session.
-
-### Per-phase workflow
-Open the matching notebook in `notebooks/` and run it. Phases must run in order on a fresh session because each phase consumes the previous phase's outputs.
-
-### Resuming an interrupted session
-After Phase 1 / Phase 4 finish, the notebook offers to back up `degraded/` and `enhanced/` to Drive as gzip caches. On the next session a resume cell pulls them back to local disk so Phase 1 / Phase 4 don't re-run.
-
----
-
-## Outputs
-
-Per-phase artefacts under `Drive/Thesis/results/phase<N>_<name>/`:
-
-| Folder | Contents |
-| ------ | -------- |
-| `metrics/` | CSVs and JSONs (training history, stress-test results, XAI summaries, ensemble predictions, etc.) |
-| `plots/` | Headline figures: accuracy-vs-degradation curves, XAI faithfulness/stability curves, recovery plots, confusion matrices. |
-| `samples/` | Qualitative figures: degradation grids, heatmap overlays, side-by-side restorations. |
-| `logs/` | Optional run logs. |
-
-Trained models live in `Drive/Thesis/checkpoints/` (`<arch>_best.pt` for each classifier, plus the EyeQ quality classifier).
-
----
-
-## Current Status
-
-| Phase | State | Notes |
-| ----- | ----- | ----- |
-| 1 — Data engineering | Complete | 2,930 pristine images × 9 degraded variants. Disk-optimised by writing 224×224 JPEGs. |
-| 2 — Model benchmarking | First pass complete | ResNet-50 0.838 acc, EfficientNet-B3 0.806 acc, ViT-Base 0.686 acc. ViT being re-trained with proper hyperparameters (lower LR, layer-wise LR decay, longer warmup, MixUp). |
-| 3 — XAI benchmark | First pass complete | Attention rollout most stable (Spearman > 0.9 across degradations). Grad-CAM degrades sharply under noise. SHAP currently undersampled (`n=60`) — bumping for next pass. |
-| 4 — GenAI enhancement | First pass complete | Swin2SR + CLAHE evaluated. Negative result on most conditions in current pass — switching to a stronger restorer (Real-ESRGAN / fundus-specific CycleGAN). |
-| 5 — Quality-aware ensemble | First pass complete | EyeQ classifier 90% accuracy. End-to-end routing implemented; trust-score formula being calibrated against per-image correctness. |
-
----
-
-## Roadmap
-
-- Class-imbalance fixes: stratified split, focal loss with class weights, balanced sampler, MixUp/CutMix.
-- Per-architecture training recipe with Optuna hyperparameter search.
-- Replace TinyU-Net fallback with Real-ESRGAN / fundus-tuned CycleGAN for Phase 4.
-- Add IoU localization against IDRiD lesion masks.
-- Calibrated trust score (temperature scaling on confidence + normalized insertion AUC).
-- Bootstrap 95% confidence intervals on all reported metrics.
-
----
-
-## Tech Stack
-
-- **Framework**: PyTorch + timm
-- **XAI**: Captum, SHAP, custom Grad-CAM and attention-rollout implementations
-- **Restoration**: Swin2SR (HuggingFace `transformers`), TinyU-Net fallback
-- **Ops**: scikit-learn, scikit-image, OpenCV, Pillow, tqdm, matplotlib
-- **Hyperparameter search**: Optuna
-- **Runtime**: Google Colab (A100 / T4)
+- [`docs/WHAT_WE_ARE_DOING.txt`](docs/WHAT_WE_ARE_DOING.txt) — plain-language tour of the whole study
+- [`docs/PROJECT_OVERVIEW.md`](docs/PROJECT_OVERVIEW.md) — engineering overview
+- [`docs/PAPER_ARCHITECTURE_AND_METRICS.md`](docs/PAPER_ARCHITECTURE_AND_METRICS.md) — architectures and metric definitions
+- [`docs/OBSERVATIONS_version1.md`](docs/OBSERVATIONS_version1.md) — running observations
 
 ---
 
 ## Citation
 
-If you use this code or its results, please cite:
-
-```
+```bibtex
 @misc{kocharekar_dr_robust_xai_2026,
   author       = {Kocharekar, Atharva},
   title        = {Robust and Explainable AI for Diabetic Retinopathy:
                   Quality-Aware Ensemble with GenAI Restoration},
   year         = {2026},
   howpublished = {Master's dissertation},
-  url          = {https://github.com/<your-username>/<this-repo>}
+  url          = {https://github.com/Atharvax16/Comparative-Study-for-Diabetic-Retinopathy-Detection-and-Interpretability-methods}
 }
 ```
 
----
-
-## License
-
-Released under the MIT License. See `LICENSE` for details. Dataset usage is governed by the original APTOS 2019 and EyeQ licences.
-
----
-
 ## Acknowledgements
 
-- APTOS 2019 Blindness Detection — Asia Pacific Tele-Ophthalmology Society.
-- EyeQ dataset — for the quality-grading labels that drive Phase 1 filtering and Phase 5 routing.
-- Open-source community for `timm`, `captum`, `shap`, `grad-cam`, `diffusers`, and `transformers`.
+APTOS 2019 Blindness Detection (Asia Pacific Tele-Ophthalmology Society) and the EyeQ dataset, plus the open-source `timm`, `captum`, `shap`, `grad-cam`, `diffusers`, and `transformers` projects.

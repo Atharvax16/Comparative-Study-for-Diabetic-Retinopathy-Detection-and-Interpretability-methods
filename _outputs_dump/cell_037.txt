@@ -1,6 +1,0 @@
-### CELL 37  |  first line: from sklearn.metrics import cohen_kappa_score
-================================================================================
-
---- output[0] ---
-train_v3 / evaluate_v3 / build_model_v3 ready.
-

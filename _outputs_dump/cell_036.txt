@@ -1,6 +1,0 @@
-### CELL 36  |  first line: class OrdinalFocalLoss(nn.Module):
-================================================================================
-
---- output[0] ---
-OrdinalFocalLoss ready.
-

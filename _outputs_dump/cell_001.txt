@@ -1,6 +1,0 @@
-### CELL 1  |  first line: from google.colab import drive
-================================================================================
-
---- output[0] ---
-Mounted at /content/drive
-

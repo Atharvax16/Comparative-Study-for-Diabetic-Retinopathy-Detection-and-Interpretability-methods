@@ -1,6 +1,0 @@
-### CELL 11  |  first line: # === Improved training infrastructure ===
-================================================================================
-
---- output[0] ---
-Improved training infrastructure loaded.
-

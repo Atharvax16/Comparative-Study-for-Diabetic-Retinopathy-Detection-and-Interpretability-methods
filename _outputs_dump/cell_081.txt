@@ -1,7 +1,0 @@
-### CELL 81  |  first line: classifiers = {n: load_classifier(n) for n in {best_clean, best_robust}}
-================================================================================
-
---- output[0] ---
-  [MultiScaleClassifier] tf_efficientnetv2_s.in21k_ft_in1k: using last 4 of 5 stages, dims=[48, 64, 160, 256], total=528
-  [MultiScaleClassifier] convnext_base.fb_in22k_ft_in1k_384: using last 4 of 4 stages, dims=[128, 256, 512, 1024], total=1920
-

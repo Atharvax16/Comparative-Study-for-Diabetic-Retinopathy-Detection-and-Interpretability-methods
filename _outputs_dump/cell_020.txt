@@ -1,9 +1,0 @@
-### CELL 20  |  first line: # 1.2 Class-balance plot
-================================================================================
-
---- output[0] ---
-<Figure size 700x400 with 1 Axes>
-
---- output[1] ---
-Saved: /content/drive/MyDrive/Thesis/results/phase1_data_engineering/plots/class_distribution.png
-

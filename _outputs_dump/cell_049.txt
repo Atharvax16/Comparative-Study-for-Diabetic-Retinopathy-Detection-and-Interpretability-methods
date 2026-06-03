@@ -1,9 +1,0 @@
-### CELL 49  |  first line: P3 = PHASE_DIRS['phase3_xai_benchmark']
-================================================================================
-
---- output[0] ---
-  [MultiScaleClassifier] convnext_base.fb_in22k_ft_in1k_384: using last 4 of 4 stages, dims=[128, 256, 512, 1024], total=1920
-  [MultiScaleClassifier] tf_efficientnetv2_s.in21k_ft_in1k: using last 4 of 5 stages, dims=[48, 64, 160, 256], total=528
-  [MultiScaleClassifier] vit_base_patch16_clip_384.laion2b_ft_in12k_in1k: using last 3 of 3 stages, dims=[768, 768, 768], total=2304
-Loaded: ['resnet50', 'efficientnet_b3', 'vit_base']
-

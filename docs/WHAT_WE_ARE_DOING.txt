@@ -1,0 +1,445 @@
+================================================================================
+WHAT WE ARE DOING AND WHY
+Thesis: Robust and Explainable AI for Diabetic Retinopathy Classification
+================================================================================
+
+
+THE PROBLEM
+───────────
+
+Diabetic retinopathy (DR) is the leading cause of preventable blindness in
+working-age adults. Over 100 million people worldwide are at risk. The
+solution is early detection through regular screening of the retina using
+fundus photographs. But there aren't enough ophthalmologists — especially
+in low-resource settings where the disease burden is highest.
+
+Deep learning has stepped in. Models like ResNet, EfficientNet, and Vision
+Transformers can look at a fundus image and grade the severity of DR on a
+5-point scale (No DR, Mild, Moderate, Severe, Proliferative) with accuracy
+that matches or exceeds human specialists. On clean, well-captured images,
+published results hit 84-89% accuracy on the APTOS 2019 benchmark.
+
+But here's the problem nobody talks about: those results are measured on
+perfect images. In the real world — a rural clinic in India, a mobile
+screening van in sub-Saharan Africa, a GP's office with a handheld retinal
+camera — images come out blurry (camera shake, wrong focus), too dark or
+too bright (improper lighting), or grainy (cheap sensor, low light). Studies
+show 15-30% of real-world screening images are too poor for reliable diagnosis.
+
+What happens to that 88% accuracy when the image is blurry? Nobody knows,
+because nobody has systematically tested it.
+
+And there's a deeper problem. Modern clinical AI doesn't just give a
+diagnosis — it shows WHY it made that decision, through heatmaps
+(Grad-CAM, SHAP) that highlight which parts of the image the model looked
+at. A doctor sees the heatmap pointing at a cluster of microaneurysms and
+thinks "okay, the AI is looking at the right thing, I trust this diagnosis."
+
+But what happens to that heatmap when the image is degraded? Does the
+model still look at the lesion, or does it start looking at blur artifacts,
+noise patterns, brightness gradients? If the heatmap shifts to clinically
+irrelevant regions while the diagnosis stays correct, the doctor has false
+confidence in an AI that's guessing for the wrong reasons.
+
+This is the question nobody has asked. We ask it.
+
+
+================================================================================
+WHAT WE ARE ACTUALLY DOING
+================================================================================
+
+We built a five-phase experimental pipeline that systematically answers
+four research questions. Here's each phase and what it does:
+
+
+PHASE 1: DATA ENGINEERING
+─────────────────────────
+
+We take the APTOS 2019 dataset (2,930 fundus images with DR severity labels)
+and synthetically degrade every test image in controlled, reproducible ways:
+
+  - Gaussian blur at 3 severity levels (sigma = 1.5, 3.0, 6.0)
+    → simulates camera defocus / shaky hands
+  
+  - Exposure shift at 3 severity levels (gain = 0.7/1.3, 0.5/1.6, 0.3/2.0)
+    → simulates wrong lighting / overexposure / underexposure
+  
+  - Gaussian noise at 3 severity levels (std = 0.03, 0.08, 0.15)
+    → simulates cheap sensor / low-light capture
+
+This gives us 9 degraded variants per test image (3 types × 3 levels).
+The degradation is the experiment, not a training trick. We train on clean
+images with standard augmentation. We evaluate on degraded images to
+expose how models fail.
+
+Why synthetic and not real degradation? Because synthetic degradation is
+controlled and reproducible. We know exactly what we applied (sigma=6.0
+blur), so we can measure exactly how much accuracy drops and how much the
+explanation shifts. With real degradation, you can't isolate variables.
+
+
+PHASE 2: MODEL BENCHMARKING UNDER STRESS
+─────────────────────────────────────────
+
+We train three architectures representing two fundamentally different
+approaches to image understanding:
+
+  CNNs (local pattern matching):
+    - ResNet50: the workhorse CNN, processes images through hierarchical
+      stacks of small (3×3) convolutional filters
+    - EfficientNet-B3: a more efficient CNN with squeeze-and-excitation
+      blocks that recalibrate channel-wise features
+
+  Vision Transformer (global attention):
+    - ViT-Base: divides the image into 16×16 patches, computes attention
+      across ALL patches simultaneously, allowing each region to
+      incorporate information from every other region
+
+We train all three on clean APTOS images and then evaluate them on every
+degradation condition. This answers RQ1.
+
+What we found:
+  - On clean images: ViT leads at 84.77%, with ResNet at 75.68% and
+    EfficientNet at 76.59%. A modest gap.
+  - Under severe blur: ViT retains 56.82%. ResNet drops to 47.27%.
+    EfficientNet collapses to 7.95%. A massive gap.
+  - Under severe noise: ViT retains 61.82%. ResNet drops to 49.77%.
+    EfficientNet collapses to 20.00%.
+
+The robustness gap between ViT and EfficientNet under blur is 49 percentage
+points — nearly half the entire accuracy scale. This gap is completely
+invisible if you only test on clean images.
+
+WHY ViT is more robust: self-attention processes 16×16 patches (256 pixels
+each), smoothing out per-pixel noise. It can also "route around" corrupted
+patches by attending more heavily to informative ones. CNNs process through
+tiny 3×3 filters that are devastated by pixel-level corruption.
+
+WHY EfficientNet collapses worse than ResNet: EfficientNet's compound
+scaling makes it more parameter-efficient but also more specialised to
+the exact input distribution it was trained on. ResNet's simpler, deeper
+architecture has more redundancy.
+
+
+PHASE 3: EXPLAINABILITY UNDER DEGRADATION
+─────────────────────────────────────────
+
+This is the novel core of the thesis. We run three explainability methods
+on every (model, image, degradation condition) combination:
+
+  Grad-CAM (for CNNs):
+    Hooks into the last convolutional layer, computes gradient-weighted
+    activation maps. Produces a coarse (7×7 or 14×14) heatmap showing
+    which spatial regions activated most strongly for the predicted class.
+    Fast, widely used, but low spatial resolution.
+
+  SHAP — SHapley Additive exPlanations (for all models):
+    Perturbs different image regions and measures how the prediction
+    changes. Assigns a Shapley value (from game theory) to each region,
+    quantifying its contribution. Model-agnostic, theoretically grounded,
+    fine-grained. Works on both CNNs and ViTs.
+
+  Attention Rollout (for ViT only):
+    Aggregates attention weights across all transformer layers by
+    multiplying attention matrices. Shows where the model attends.
+    Native to transformers, no hooks needed.
+
+For each heatmap, we compute three metrics:
+
+  Stability (SSIM):
+    How similar is the degraded-image heatmap to the clean-image heatmap?
+    1.0 = identical explanations, 0.0 = completely different.
+    This is our key novel metric. It measures "explanation drift."
+
+  Insertion AUC:
+    Progressively reveal pixels in order of heatmap importance. How quickly
+    does the prediction confidence rise? Higher = better explanation.
+    Tests whether the heatmap correctly identifies important pixels.
+
+  Deletion AUC:
+    Progressively remove pixels in order of heatmap importance. How quickly
+    does the prediction confidence drop? Lower = better explanation.
+    Tests the same thing from the opposite direction.
+
+What we found:
+  - Grad-CAM stability on ResNet drops to 0.19 under heavy noise. The
+    heatmap is almost unrecognisable compared to clean.
+  - SHAP stability drops even further — to 0.002 and even negative values
+    (-0.086), meaning the explanation is ANTI-CORRELATED with clean.
+    The model is actively looking at opposite regions.
+  - ViT attention maps are more stable (0.80 under noise) but with
+    lower class-discriminative precision.
+  - Insertion AUC remains moderate even when stability is zero. This means
+    SHAP accurately reflects what the model is doing (faithful), but what
+    the model is doing is no longer clinically meaningful (drifted).
+
+The key insight: a model can produce the correct diagnosis on a degraded
+image while its explanation points at completely wrong regions. The
+diagnosis is right by accident. The explanation provides false confidence.
+This is "explanation drift" — a previously unreported failure mode.
+
+SHAP is more sensitive to degradation than Grad-CAM. Grad-CAM's apparent
+stability is partly an artifact of its coarse 7×7 resolution, which
+spatially smooths away the noise-level detail. SHAP, operating at
+pixel/superpixel resolution, honestly reveals the chaotic fragmentation
+of the model's attention. For clinical deployment, SHAP is the more
+honest method — it fails loudly rather than hiding the failure.
+
+
+PHASE 4: GENAI-BASED IMAGE RESTORATION
+───────────────────────────────────────
+
+If degradation causes accuracy loss AND explanation drift, can we fix
+the image before diagnosing? We compare three restoration approaches:
+
+  CLAHE (traditional baseline):
+    Contrast Limited Adaptive Histogram Equalisation. A non-learned
+    method that improves local contrast. Simple, fast, no training
+    required. Answers: "how far does a non-AI method get?"
+
+  A-ESRGAN (GAN-based):
+    Attention-Enhanced Super-Resolution GAN. Uses a deep residual
+    network with attention discriminators. Pretrained on natural images.
+    Answers: "how does a general-purpose GAN perform on fundus images?"
+
+  Conditional DDPM with Pathology Preservation (our main contribution):
+    A standard denoising diffusion probabilistic model (DDPM) with three
+    specific design choices for clinical safety:
+
+    1. RESIDUAL ARCHITECTURE: The model predicts the degradation residual,
+       not the clean image. Output = degraded_input + model_prediction.
+       Pathological features (lesions, microaneurysms, vessel patterns)
+       flow directly through the skip connection. The model only learns
+       to remove degradation, not to generate anatomy.
+
+    2. PATHOLOGY-AWARE PERCEPTUAL LOSS: Instead of using VGG features
+       (trained on cats and cars), we use our own trained EfficientNet-B3
+       DR classifier's features as the perceptual loss backbone. This
+       forces the diffusion model to preserve features that the DR
+       classifier considers diagnostically important.
+
+    3. INFERENCE-TIME CLAMPING: At every reverse denoising step, the
+       predicted clean image is anchored toward the degraded input:
+         x_pred = (1 - λ) × model_output + λ × degraded_input
+       This prevents the model from hallucinating features that don't
+       exist in the original image.
+
+    4. HALLUCINATION DETECTION: After restoration, we compare:
+       - DR grade before vs after (did the diagnosis change?)
+       - Classifier activation maps before vs after (did attention shift
+         to a previously inactive region?)
+       - Pixel-level deviation (how much did the image actually change?)
+       If the grade changes or activations shift to new regions, the
+       restoration is flagged as potentially hallucinated.
+
+  Why diffusion over GANs? The professor specifically directed us here.
+  Diffusion models have been shown to produce higher-fidelity restoration
+  than GANs with fewer artifacts, because the iterative denoising process
+  allows fine-grained control at each step. GANs generate in a single
+  forward pass with no intermediate correction opportunity. The iterative
+  nature also allows us to inject the pathology preservation clamp at
+  every step, not just at the end.
+
+  Why not Stable Diffusion? Stable Diffusion is a text-to-image generation
+  model (860M parameters). It generates images from text prompts. We need
+  an image-to-image restoration model that's lightweight enough for
+  clinical deployment. Our conditional DDPM is purpose-built for this task.
+
+After restoration, we re-evaluate all three classifiers on the enhanced
+images. The comparison becomes:
+  raw degraded accuracy → CLAHE accuracy → A-ESRGAN accuracy → DDPM accuracy
+
+But accuracy recovery is only half the story. We also re-run SHAP and
+Grad-CAM on the restored images and compare heatmaps against both the
+degraded and clean baselines. This is Phase 4's key contribution:
+does restoration recover the EXPLANATION, not just the accuracy?
+
+A GAN might hallucinate textures that boost classifier confidence while
+shifting the heatmap to regions that don't correspond to real pathology.
+The accuracy recovers, but the explanation is now driven by artifacts.
+Our hallucination detection catches this.
+
+
+PHASE 5: QUALITY-AWARE ENSEMBLE
+───────────────────────────────
+
+We tie everything together into a practical system:
+
+  1. A quality classifier (ResNet-18 trained on the EyeQ dataset) assesses
+     the quality of each incoming fundus image: good, usable, or reject.
+
+  2. Based on predicted quality, the image is routed through the optimal
+     pipeline:
+       Good    → no enhancement, use ViT-Base (best clean accuracy)
+       Usable  → CLAHE enhancement, use ViT-Base
+       Reject  → DDPM restoration, use ViT-Base, run hallucination check
+
+  3. A clinical trust score combines:
+       trust = 0.5 × prediction_confidence + 0.5 × explanation_fidelity
+     Where explanation fidelity = insertion AUC of the SHAP/Grad-CAM heatmap.
+
+     A prediction with 90% confidence but garbage explanation (insertion
+     0.2) gets trust 0.55. A prediction with 80% confidence and faithful
+     explanation (insertion 0.8) gets trust 0.80. The second one is more
+     clinically trustworthy.
+
+  4. Images with trust score below a threshold are flagged for human
+     review rather than auto-diagnosed.
+
+This is the practical clinical contribution: a system that doesn't just
+diagnose, but knows when to trust itself and when to ask for help.
+
+
+================================================================================
+THE FOUR RESEARCH QUESTIONS
+================================================================================
+
+RQ1: How do Vision Transformers compare to CNNs in DR classification
+     performance across varying levels of synthetic image degradation?
+─────────────────────────────────────────────────────────────────────
+
+What it asks: When image quality drops, which architecture family
+degrades more gracefully — local-filter CNNs or global-attention ViTs?
+
+What we found: ViT is dramatically more robust. Under severe noise,
+ViT retains 61.82% accuracy while EfficientNet collapses to 20%.
+This 42-point robustness gap is invisible in clean-image benchmarks.
+ResNet sits in between at 49.77%, failing more gracefully than
+EfficientNet but far worse than ViT.
+
+Why it matters: If you're deploying DR screening in a setting where
+image quality is variable (which is most real-world settings), the
+choice of architecture is not just a performance decision — it's a
+patient safety decision. A ViT-based system will catch roughly 3×
+more disease cases than an EfficientNet system when images are noisy.
+
+Phase: 2 (model benchmarking under stress)
+
+
+RQ2: To what extent does the fidelity and stability of explainability
+     methods (Grad-CAM, SHAP, Attention Rollout) degrade under image
+     quality conditions?
+─────────────────────────────────────────────────────────────────────
+
+What it asks: When the image degrades, does the model's explanation
+stay reliable? Or can a model be right for the wrong reasons?
+
+What we found: Explanations degrade FASTER than accuracy. Grad-CAM
+stability on ResNet drops to 0.19 under noise-high (the model still
+gets ~50% accuracy, but its explanation is unrecognisable). SHAP is
+even more sensitive, dropping to near-zero or negative stability,
+revealing that the model's fine-grained attention has completely
+restructured to track noise artifacts instead of pathology.
+
+The critical insight: moderate insertion AUC coexists with zero
+stability. SHAP faithfully tracks what the model is doing (the
+explanation is accurate), but what the model is doing is clinically
+wrong (it's looking at noise, not lesions). A faithful explanation
+of a drifted model is accurate but dangerous.
+
+Why it matters: No published paper measures this. The assumption
+that "if the model is right, the explanation is trustworthy" is
+wrong. Our stability metric catches a failure mode that accuracy
+alone misses — and this failure mode is exactly what would mislead
+a clinician relying on AI-generated heatmaps.
+
+Phase: 3 (XAI benchmark under degradation)
+
+
+RQ3: Can GenAI-based image enhancement significantly recover both
+     diagnostic accuracy AND XAI localisation precision compared
+     to traditional methods?
+─────────────────────────────────────────────────────────────────
+
+What it asks: If we fix the image before diagnosing, do we recover
+not just the accuracy but also the explanation? And can we do it
+without hallucinating fake pathology?
+
+What we're building: A conditional DDPM with residual architecture
+(pathological features flow through skip connections), pathology-
+aware perceptual loss (using our own DR classifier features, not
+VGG), inference-time clamping (anchoring output to degraded input),
+and explicit hallucination detection.
+
+Why "both accuracy and XAI" matters: A GAN could restore a blurry
+image and the classifier's accuracy might jump from 47% to 70%.
+But if the GAN hallucinated textures that the classifier uses for
+its prediction, the heatmap now points at fake features. The
+accuracy "recovered" but the explanation is driven by artifacts.
+This is more dangerous than no restoration, because it creates
+false confidence. Our post-restoration XAI verification catches
+this.
+
+Why it matters: This is the first work to evaluate restoration
+not just on accuracy recovery but on explanation recovery. Every
+published fundus enhancement paper measures PSNR/SSIM or
+downstream accuracy. None check whether the explanation is
+trustworthy after restoration.
+
+Phase: 4 (GenAI enhancement + post-restoration XAI verification)
+
+
+RQ4: How can a quality-aware ensemble framework dynamically select
+     the optimal enhancement–model–XAI combination to maximise
+     clinical trust?
+─────────────────────────────────────────────────────────────────
+
+What it asks: Can we build a system that automatically detects
+image quality, routes to the right restoration/model/XAI pipeline,
+and produces a trust score that a clinician can act on?
+
+What we're building: A three-stage pipeline:
+  1. Quality assessment (trained on EyeQ, applied to any image)
+  2. Conditional routing (no enhancement / CLAHE / DDPM)
+  3. Trust scoring (confidence × explanation fidelity)
+
+Why it matters: The real-world product is not "a model that
+classifies DR." It's "a system that classifies DR, knows when
+the image is too degraded to trust, fixes it if possible, and
+tells the doctor whether to trust the result." That's what
+RQ4 builds.
+
+Phase: 5 (quality-aware ensemble with trust scoring)
+
+
+================================================================================
+WHAT MAKES THIS NOVEL — THE ONE-SENTENCE VERSION
+================================================================================
+
+No published work connects degradation, explainability, restoration, and
+post-restoration explainability verification into a single framework.
+
+Papers that classify DR stop at clean accuracy.
+Papers that study XAI show heatmaps on clean images.
+Papers that enhance fundus images measure PSNR.
+Nobody asks: "When the image degrades, does the explanation drift? And
+when we restore the image, does the explanation come back?"
+
+We ask that question, measure it quantitatively, and build a system
+that detects and prevents the failure mode.
+
+
+================================================================================
+THE THESIS IN ONE PARAGRAPH
+================================================================================
+
+AI diagnoses diabetic retinopathy with high accuracy on clean images, but
+real-world screening produces degraded images that cause both diagnostic
+accuracy and the AI's visual explanations to fail. We show that explanations
+degrade faster than accuracy — a model can diagnose correctly while its
+heatmap points at noise artifacts instead of lesions, giving clinicians
+false confidence. Vision Transformers are dramatically more robust than
+CNNs under degradation (62% vs 20% under severe noise), a gap invisible
+in clean benchmarks. We build a pathology-aware conditional diffusion model
+that restores degraded images while preserving diagnostic features through
+residual architecture, classifier-guided perceptual loss, and explicit
+hallucination detection. Critically, we verify that restoration recovers
+the explanation, not just the accuracy — the first work to do so. A
+quality-aware ensemble ties it all together, routing each image through
+the optimal pipeline and producing a clinical trust score that integrates
+diagnostic confidence with explanation reliability.
+
+
+================================================================================
+END
+================================================================================

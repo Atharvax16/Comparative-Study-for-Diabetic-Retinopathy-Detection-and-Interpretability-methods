@@ -1,7 +1,0 @@
-### CELL 28  |  first line: # [RESUME GUARD] Skip v1/v2 training if all checkpoints exist on Drive.
-================================================================================
-
---- output[0] ---
-[skip] v2 checkpoints already on Drive — not retraining.
-        Found: resnet50_best.pt efficientnet_b3_best.pt vit_base_best.pt
-
