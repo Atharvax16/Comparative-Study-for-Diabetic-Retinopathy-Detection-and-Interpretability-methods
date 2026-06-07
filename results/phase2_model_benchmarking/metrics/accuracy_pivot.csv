@@ -6,6 +6,6 @@ clean,none,0.766,0.757,0.848
 exposure,high,0.566,0.525,0.545
 exposure,low,0.666,0.677,0.784
 exposure,mid,0.614,0.584,0.709
-noise,high,0.216,0.5,0.602
-noise,low,0.623,0.714,0.773
-noise,mid,0.202,0.523,0.664
+noise,high,0.202,0.498,0.611
+noise,low,0.618,0.698,0.768
+noise,mid,0.2,0.523,0.677
