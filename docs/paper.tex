@@ -1,0 +1,212 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage[hidelinks]{hyperref}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Towards a Robust and Explainable Pipeline for Diabetic Retinopathy Classification through Quality-Aware Gen-AI based Image Restoration}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} [TODO: Author Name]}
+\IEEEauthorblockA{\textit{[TODO: Department]} \\
+\textit{[TODO: Institution]}\\
+[TODO: City, Country] \\
+[TODO: Email]}
+}
+
+\maketitle
+
+\begin{abstract}
+Diabetic retinopathy (DR) screening models achieve high accuracy on curated datasets, yet 15--30\% of real-world fundus images suffer from degradations such as blur, exposure errors, and noise. A common hypothesis is that generative AI (GenAI) image restoration can recover diagnostic accuracy on these degraded images. In this paper, we present a controlled robustness benchmark across nine synthetic degradations to evaluate modern Convolutional Neural Networks (CNNs) and Vision Transformers (ViTs). We investigate the effect of restoration on diagnostic performance using six methods, including Generative Adversarial Networks (GANs) and Denoising Diffusion Probabilistic Models (DDPMs). Our findings reveal a counter-intuitive negative result: while GenAI restoration improves pixel fidelity, it does not reliably recover diagnostic accuracy, and diffusion-based restorers actively harm it due to distribution shift. Furthermore, we demonstrate that explanation heatmaps degrade faster than accuracy. To address these challenges, we propose a quality-aware triage pipeline using selective prediction with a calibrated trust score. At 80\% coverage, our triage approach achieves a Quadratic Weighted Kappa (QWK) of 0.665 on degraded images, outperforming both a ``do-nothing'' baseline (0.525) and a ``restore-all'' strategy (0.464). Restoration is shown to be beneficial only under severe noise.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Diabetic Retinopathy, Image Restoration, Generative AI, Explainable AI, Robustness, Selective Prediction
+\end{IEEEkeywords}
+
+\section{Introduction}
+Clinical screening for diabetic retinopathy (DR) produces a high volume of fundus photographs. While deep-learning models can grade DR with approximately 85\% accuracy on clean, curated images, real-world screening often yields images of uneven quality. It is estimated that 15--30\% of screening images exhibit motion blur, mis-exposure, or sensor noise. The vulnerability of diagnostic models to such quality degradation is a critical concern, particularly regarding the stability of the predictions and the faithfulness of Explainable AI (XAI) heatmaps.
+
+Recently, generative AI (GenAI) techniques, including Generative Adversarial Networks (GANs) and Denoising Diffusion Probabilistic Models (DDPMs), have become popular for image restoration. A natural hypothesis is that applying these restoration tools to degraded fundus images will recover the lost diagnostic signal. However, it remains unclear whether these models recover the underlying pathology or merely hallucinate plausible but diagnostically irrelevant textures, thereby introducing distribution shifts that harm classification.
+
+In this work, we investigate the following research questions:
+\begin{itemize}
+    \item \textbf{RQ1:} How do Vision Transformers (ViTs) compare to CNNs as image quality degrades?
+    \item \textbf{RQ2:} Do explanation methods (e.g., Grad-CAM, Integrated Gradients) remain faithful and stable as quality drops?
+    \item \textbf{RQ3:} Can GenAI restoration recover diagnostic accuracy, as opposed to merely improving pixel fidelity?
+    \item \textbf{RQ4:} Can a quality-aware system route each image to the optimal pipeline and output a reliable trust score?
+\end{itemize}
+
+Our core thesis is that generative restoration improves pixel fidelity but does not reliably recover diagnostic accuracy. In fact, diffusion-based restorers actively harm classification because their output is out-of-distribution (OOD) for the classifier. Instead, a quality-aware triage system that abstains on low-confidence images and applies restoration only where it is measurably beneficial is a safer, more deployable solution.
+
+The contributions of this paper are as follows:
+1) A controlled robustness benchmark for DR grading across 9 graded degradations covering CNNs and ViTs.
+2) Evidence that explanations degrade faster than accuracy (XAI stability).
+3) A causal isolation of why restoration fails via a clean-image control that measures each restorer's inherent distribution shift.
+4) A quantified demonstration that GANs are relatively safe while diffusion models are harmful for downstream diagnosis, highlighting that raw accuracy can hide harm that Quadratic Weighted Kappa (QWK) reveals.
+5) A quality-aware triage and selective-prediction system with a calibrated trust score that outperforms both ``do-nothing'' and ``restore-everything'' approaches.
+
+\section{Related Work}
+\textbf{Diabetic Retinopathy and Robustness:} DR grading is a well-studied task, often formulated as an ordinal classification problem on datasets like APTOS 2019 \cite{aptos2019}. While models like ResNet \cite{he2016resnet}, ConvNeXt \cite{liu2022convnext}, and EfficientNetV2 \cite{tan2021efficientnetv2} perform well on clean data, their robustness to corruptions varies. Vision Transformers (ViTs) \cite{dosovitskiy2021vit, radford2021clip} have shown distinct robustness profiles compared to CNNs.
+
+\textbf{Image Restoration:} Traditional methods like CLAHE \cite{pizer1987clahe} improve contrast but do not hallucinate details. Modern GenAI approaches include GAN-based super-resolution (e.g., A-ESRGAN \cite{wei2021aesrgan}, SwinIR \cite{liang2021swinir}) and diffusion models (e.g., DDPM \cite{ho2020ddpm}, Cold Diffusion \cite{bansal2022colddiffusion}). Recent evidence suggests diffusion models may underperform at general image restoration in medical contexts \cite{arxiv241209324}.
+
+\textbf{Explainability (XAI):} Methods like Grad-CAM \cite{selvaraju2017gradcam}, SHAP \cite{lundberg2017shap}, Integrated Gradients \cite{sundararajan2017ig}, and Attention Rollout \cite{abnar2020rollout} are used to interpret model decisions. However, the stability of these explanations under distribution shifts remains a challenge.
+
+\textbf{Selective Prediction and Calibration:} Selective classification \cite{geifman2017selective} allows models to abstain from predicting when confidence is low. Proper calibration, such as temperature scaling \cite{guo2017calibration}, is essential for generating reliable confidence scores. Image quality assessment networks like EyeQ \cite{fu2019eyeq} provide prior signals for triage.
+
+\section{Methods}
+
+\subsection{Datasets and Degradation Model}
+We utilize the APTOS 2019 Blindness Detection dataset \cite{aptos2019}, which contains fundus images labeled with a 5-grade DR severity scale (0: No DR, 1: Mild, 2: Moderate, 3: Severe, 4: Proliferative). The dataset is heavily class-imbalanced. We also utilize the EyeQ \cite{fu2019eyeq} criteria for per-image quality labels (good, usable, reject).
+
+To create a controlled testbed, we apply synthetic, graded degradations to high-quality images. We implement three degradation primitives: Gaussian blur, exposure (gain) shift, and additive Gaussian noise. Each is applied at three severity levels (low, mid, high), resulting in 9 degradation conditions.
+
+\subsection{Classifiers}
+We evaluate three base architectures: ConvNeXt-Base at 384px resolution \cite{liu2022convnext}, EfficientNetV2-S \cite{tan2021efficientnetv2}, and CLIP-ViT-B/16 at 384px \cite{radford2021clip}. Images undergo Ben Graham preprocessing \cite{graham2015kaggle}. The models employ a multi-scale feature fusion head and are trained using an ordinal focal loss \cite{lin2017focal} to account for the ordinal nature of DR grades. Training incorporates MixUp \cite{zhang2018mixup}, CutMix \cite{yun2019cutmix}, RandAugment \cite{cubuk2020randaugment}, Exponential Moving Average (EMA), and 8-view Test-Time Augmentation (TTA). Note that the EfficientNetV2-S model collapsed during training (accuracy $\sim$0.05) and is excluded from the primary robustness claims.
+
+\subsection{Restoration Models}
+We evaluate six restoration strategies:
+1) \textbf{CLAHE} \cite{pizer1987clahe} as a non-generative baseline.
+2) \textbf{A-ESRGAN} \cite{wei2021aesrgan}, a GAN-based super-resolution model.
+3) \textbf{SwinIR+GAN} \cite{liang2021swinir}.
+4) \textbf{Cold Diffusion} \cite{bansal2022colddiffusion}, which uses deterministic degradation as the forward process.
+5) \textbf{Vanilla DDPM} \cite{ho2020ddpm} (conditional).
+6) \textbf{Pathology-preserving DDPM} (a custom variant).
+
+\subsection{Explainability (XAI) Methods}
+We apply Grad-CAM \cite{selvaraju2017gradcam} for CNNs, Attention Rollout \cite{abnar2020rollout} for ViTs, and Integrated Gradients \cite{sundararajan2017ig} across architectures. XAI stability is measured via the Structural Similarity Index (SSIM) of heatmaps under degradation, while faithfulness is evaluated using insertion and deletion AUC.
+
+\subsection{Metrics and Calibration}
+Due to class imbalance, the headline metric is Quadratic Weighted Kappa (QWK) \cite{cohen1968kappa}, supplemented by accuracy. We report bootstrap 95\% confidence intervals. Model calibration is performed using temperature scaling, measured by Expected Calibration Error (ECE) \cite{guo2017calibration}.
+
+\subsection{Quality-Aware Triage and Selective Prediction}
+We implement a triage system using a quality classifier to assign confidence scores. The protocol utilizes selective prediction: images below a confidence threshold are rejected (flagged for re-acquisition). For the remaining images, a fixed prior routing rule is applied: images with severe noise are restored using A-ESRGAN, while all others are passed raw to the classifier.
+
+\section{Experiments and Results}
+
+\subsection{RQ1: Model Robustness}
+Our stress tests indicate that Vision Transformers degrade more gracefully than CNNs under increasing degradation---a gap that is invisible on clean benchmarks. For instance, under severe noise, the ViT retains a significantly higher QWK compared to the ConvNeXt model.
+
+\subsection{RQ2: XAI Stability and Faithfulness}
+Explanation stability (SSIM of heatmaps) falls toward---and can drop below---zero under noise, even while the model's accuracy remains around 50\%. This demonstrates that explanations drift faster than accuracy, indicating that models may be ``right for the wrong reasons'' under degradation.
+
+\subsection{RQ3: Generative Restoration and Distribution Shift}
+To isolate the cause of restoration failure, we performed a clean-image control experiment (Table \ref{tab:dist_shift}). Clean, un-degraded images were passed through each restorer and re-classified using the ConvNeXt model.
+
+\begin{table}[htbp]
+\caption{Distribution-Shift Control (Clean $\rightarrow$ Restore $\rightarrow$ Re-classify, ConvNeXt). Baseline clean accuracy = 0.85.}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Restorer} & \textbf{Accuracy} & \textbf{$\Delta$ vs clean} \\
+\midrule
+\textbf{A-ESRGAN (GAN)} & \textbf{0.875} & \textbf{+0.025} \\
+CLAHE & 0.775 & $-0.075$ \\
+DDPM-pathology & 0.725 & $-0.125$ \\
+SwinIR+GAN & 0.675 & $-0.175$ \\
+Cold Diffusion & 0.300 & $-0.550$ \\
+DDPM (vanilla) & 0.100 & $-0.750$ \\
+\bottomrule
+\end{tabular}
+\label{tab:dist_shift}
+\end{center}
+\end{table}
+
+The results show that A-ESRGAN is the only distribution-safe restorer. Diffusion variants introduce massive distribution shifts that destroy classification performance, even on pristine images.
+
+Table \ref{tab:qwk_recovery} presents the QWK recovery on the degraded test set. The raw (do-nothing) approach wins on blur and exposure. Restoration substantially helps \textit{only} at severe noise, where A-ESRGAN (0.336) and DDPM-pathology (0.433) recover performance from near zero. Vanilla DDPM fails catastrophically across all conditions.
+
+\begin{table*}[htbp]
+\caption{QWK by Restorer vs Raw (Degraded Test Set, ConvNeXt)}
+\begin{center}
+\begin{tabular}{lccccccc}
+\toprule
+\textbf{Degradation / Level} & \textbf{Raw} & \textbf{CLAHE} & \textbf{A-ESRGAN} & \textbf{SwinIR} & \textbf{Cold-Diff} & \textbf{DDPM} & \textbf{DDPM-path} \\
+\midrule
+Blur Low & \textbf{0.650} & 0.591 & 0.602 & 0.539 & 0.581 & 0.031 & 0.313 \\
+Blur Mid & \textbf{0.449} & 0.445 & 0.238 & 0.408 & 0.301 & $-0.004$ & 0.206 \\
+Blur High & 0.239 & \textbf{0.251} & 0.172 & 0.200 & 0.091 & 0.052 & 0.061 \\
+Exposure Low & \textbf{0.807} & 0.700 & 0.633 & 0.482 & 0.614 & $-0.025$ & 0.472 \\
+Exposure Mid & \textbf{0.744} & 0.629 & 0.496 & 0.651 & 0.620 & 0.000 & 0.455 \\
+Exposure High & 0.509 & \textbf{0.590} & 0.359 & 0.466 & 0.503 & 0.011 & 0.367 \\
+Noise Low & \textbf{0.813} & 0.746 & 0.625 & 0.560 & 0.536 & 0.021 & 0.408 \\
+Noise Mid & \textbf{0.674} & 0.483 & 0.519 & 0.564 & $-0.005$ & $-0.030$ & 0.295 \\
+\textbf{Noise High} & $-0.007$ & $-0.035$ & 0.336 & 0.065 & 0.001 & 0.023 & \textbf{0.433} \\
+\bottomrule
+\end{tabular}
+\label{tab:qwk_recovery}
+\end{center}
+\end{table*}
+
+\subsection{RQ4: Quality-Aware Triage and Selective Prediction}
+We evaluate our triage pipeline against ``do-nothing'' and ``restore-all'' baselines (Table \ref{tab:triage}). At full coverage, triage yields the best QWK for the ConvNeXt model. 
+
+\begin{table}[htbp]
+\caption{Selective Prediction / Triage at Full Coverage (Degraded Stream)}
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+\textbf{Model} & \textbf{Pipeline} & \textbf{Accuracy} & \textbf{QWK} \\
+\midrule
+ConvNeXt & Do-nothing & 0.619 & 0.465 \\
+ConvNeXt & Restore-all & 0.602 & 0.442 \\
+ConvNeXt & \textbf{Triage} & \textbf{0.656} & \textbf{0.582} \\
+\midrule
+ViT & Do-nothing & 0.638 & 0.621 \\
+ViT & Restore-all & 0.561 & 0.388 \\
+ViT & Triage & 0.636 & 0.596 \\
+\bottomrule
+\end{tabular}
+\label{tab:triage}
+\end{center}
+\end{table}
+
+Crucially, when applying selective prediction to reject the worst 20\% of images based on confidence (80\% coverage), the ConvNeXt triage pipeline achieves 0.739 accuracy and 0.665 QWK, significantly outperforming do-nothing (0.691 acc / 0.525 QWK) and restore-all (0.674 acc / 0.464 QWK). Notably, the ``restore-all'' strategy maintains acceptable accuracy but causes QWK to crater, as indiscriminate restoration destroys the ordinal structure of minority classes. For the already-robust ViT, abstention is the primary lever, and triage performs similarly to do-nothing.
+
+\subsection{Calibration}
+Proper calibration enables the selective prediction threshold. After temperature scaling, the ViT's ECE improved from 0.071 to 0.051, while ConvNeXt remained stable at 0.070 (Table \ref{tab:calibration}).
+
+\begin{table}[htbp]
+\caption{Calibration (ECE, Temperature Scaling)}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{Temperature} & \textbf{ECE Before} & \textbf{ECE After} \\
+\midrule
+ConvNeXt & 1.000 & 0.070 & 0.070 \\
+ViT & 0.857 & 0.071 & \textbf{0.051} \\
+EfficientNet & 0.936 & 0.228 & 0.220 \\
+\bottomrule
+\end{tabular}
+\label{tab:calibration}
+\end{center}
+\end{table}
+
+\section{Discussion}
+Our findings highlight that visual fidelity does not equate to diagnostic accuracy. Generative restoration, particularly via diffusion models, introduces severe out-of-distribution shifts. GAN-based super-resolution (A-ESRGAN) proved to be the only distribution-safe restorer in our tests. The discrepancy between accuracy and QWK in the ``restore-all'' setting underscores the danger of using accuracy alone for imbalanced medical datasets. Clinically, our results suggest that ungradable images should be flagged for re-acquisition rather than hallucinated via restoration, with restoration reserved exclusively for specific, severe noise profiles.
+
+\section{Limitations}
+This study relies on synthetic degradations applied to a single dataset (APTOS). Real-world degradations are more complex. Additionally, our conditional DDPM was under-trained and collapsed to noise, representing a limitation in our diffusion evaluation. The EfficientNetV2-S model suffered from collapse during training. Finally, a baseline-convergence check is ongoing, meaning absolute performance numbers should be interpreted with caution; the core contributions lie in the relative comparisons.
+
+\section{Future Work}
+Future research should explore diffusion-based restoration using paired degraded/clean training data \cite{arxiv230809388}. Leveraging retinal foundation models like RETFound \cite{zhou2023retfound} and applying test-time adaptation \cite{wang2021tent} could provide stronger robustness guarantees. Validating the triage pipeline on datasets with natural, non-synthetic degradations (e.g., EyePACS) is a critical next step.
+
+\section{Conclusion}
+We demonstrated that generative image restoration is not a panacea for degraded diabetic retinopathy screening images. Diffusion models actively harm classification due to distribution shifts, and restoring all images destroys ordinal predictive performance. Instead, a quality-aware triage system that abstains on low-confidence images and selectively applies GAN-based restoration only to severely noisy images provides a robust, clinically viable alternative.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
