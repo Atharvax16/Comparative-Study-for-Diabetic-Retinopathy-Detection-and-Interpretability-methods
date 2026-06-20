@@ -1,0 +1,1 @@
+id_code,degradation,level,true_grade,grade_before,grade_after,raw_psnr,ddpm_path_psnr,psnr_gain,raw_ssim,ddpm_path_ssim,ssim_gain,flip_away_from_truth,got_worse_vs_truth,hallucination_risk

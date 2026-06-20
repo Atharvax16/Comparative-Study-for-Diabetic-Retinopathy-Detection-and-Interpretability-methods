@@ -153,6 +153,27 @@ Noise Mid     & \textbf{.674} & .483 & .519 & .564 & $-.005$ & $-.030$ & .295 \\
 \end{center}
 \end{table}
 
+The clearest expression of the fidelity--diagnosis gap is found where the two move in \textit{opposite} directions. Table~\ref{tab:fidelity_paradox} lists every restoration cell in which the restorer improved \textit{both} reference image-quality metrics (PSNR and SSIM) yet \textit{lowered} downstream accuracy---6 of the 18 (degradation, restorer) cells evaluated. The most striking case is Cold Diffusion on under-exposed images: it raises PSNR by 12.2~dB (16.9$\rightarrow$29.1) and SSIM by 0.12 (0.76$\rightarrow$0.87), an unambiguous visual restoration, while accuracy \textit{falls} by 4.0 points. A reviewer trusting PSNR or SSIM alone would rank this restoration a success; the diagnosis says otherwise. This is direct evidence that reference image-quality metrics are not a safe proxy for diagnostic faithfulness, and motivates the structural quality measure proposed in Future Work.
+
+\begin{table}[!t]
+\caption{Fidelity up, diagnosis down: restoration cells where PSNR \textit{and} SSIM improved yet accuracy dropped (test split, sorted by PSNR gain).}
+\label{tab:fidelity_paradox}
+\begin{center}
+\begin{tabular}{llrrr}
+\toprule
+\textbf{Degradation} & \textbf{Restorer} & \textbf{$\Delta$PSNR} & \textbf{$\Delta$SSIM} & \textbf{$\Delta$Acc} \\
+\midrule
+Exposure & Cold Diffusion & $+12.22$ & $+0.115$ & $-0.041$ \\
+Blur & Cold Diffusion & $+3.70$ & $+0.014$ & $-0.032$ \\
+Noise & A-ESRGAN & $+2.68$ & $+0.221$ & $-0.068$ \\
+Blur & DDPM-pathology & $+2.09$ & $+0.007$ & $-0.070$ \\
+Noise & DDPM-pathology & $+1.23$ & $+0.203$ & $-0.100$ \\
+Noise & SwinIR+GAN & $+0.10$ & $+0.159$ & $-0.060$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
 \subsection{RQ4: Quality-Aware Triage and Selective Prediction}
 We evaluate our triage pipeline against ``do-nothing'' and ``restore-all'' baselines (Table~\ref{tab:triage}). At full coverage, triage yields the best QWK for the ConvNeXt model.
 
@@ -212,6 +233,8 @@ This study relies on synthetic degradations applied to a single dataset (APTOS).
 \section{Future Work}
 %-----------------------------------------------------------------------
 Future research should explore diffusion-based restoration using paired degraded/clean training data \cite{arxiv230809388}. Leveraging retinal foundation models like RETFound \cite{zhou2023retfound} and applying test-time adaptation \cite{wang2021tent} could provide stronger robustness guarantees. Validating the triage pipeline on datasets with natural, non-synthetic degradations (e.g., EyePACS) is a critical next step.
+
+A more fundamental direction follows from Table~\ref{tab:fidelity_paradox}: PSNR and SSIM, and even the downstream grade itself, are \textit{proxies} that are blind to whether a restorer preserved retinal \textit{structure}. The retina is natively a geometric graph---vessel bifurcations as nodes, vessel segments as edges---and its branching angles, tortuosity, calibre, and arteriolar--venular ratio are established diabetic-retinopathy biomarkers. Extracting this vessel graph (segmentation $\rightarrow$ skeletonisation $\rightarrow$ graph) from the pre- and post-restoration images and measuring the change in its geometry would give a \textit{structural} hallucination signal: a restorer that invents a vessel, splits a real one, or bends a junction to a non-physiological angle produces a graph anomaly that no pixel metric can register. Directional, angle-aware message passing (as in DimeNet-style geometric GNNs) is a natural fit, and---because the retinal graph is 2D---the angular basis collapses to a far simpler form than its 3D molecular origin. We regard this graph-consistency metric as the principled successor to the coarse grade-flip proxy used here, and as a stand-alone line of work.
 
 %-----------------------------------------------------------------------
 \section{Conclusion}
