@@ -1,0 +1,3 @@
+model,psnr_out,ssim_out,psnr_gain,ssim_gain
+Cold Diffusion,32.874,0.815,8.928,0.172
+SwinIR+GAN,28.73,0.835,4.784,0.193

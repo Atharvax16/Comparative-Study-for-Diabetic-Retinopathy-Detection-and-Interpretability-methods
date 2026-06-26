@@ -1,0 +1,36 @@
+[2026-06-06 10:40:22] Booster setup ready. Output dir: /content/drive/MyDrive/Thesis/results/phase6_overnight_boost
+[2026-06-06 10:40:22] ==== STAGE START: A_enriched_metrics ====
+[2026-06-06 10:41:56]   [A] resnet50/blur done
+[2026-06-06 10:43:27]   [A] resnet50/exposure done
+[2026-06-06 10:44:58]   [A] resnet50/noise done
+[2026-06-06 10:46:10]   [A] efficientnet_b3/blur done
+[2026-06-06 10:47:22]   [A] efficientnet_b3/exposure done
+[2026-06-06 10:48:35]   [A] efficientnet_b3/noise done
+[2026-06-06 10:50:13]   [A] vit_base/blur done
+[2026-06-06 10:51:47]   [A] vit_base/exposure done
+[2026-06-06 10:53:22]   [A] vit_base/noise done
+[2026-06-06 10:53:22] [A] saved /content/drive/MyDrive/Thesis/results/phase6_overnight_boost/metrics/recovery_metrics_enriched.csv (189 rows)
+[2026-06-06 10:53:22] ==== STAGE OK: A_enriched_metrics (781s) ====
+[2026-06-06 10:53:22] ==== STAGE START: B_calibration ====
+[2026-06-06 10:56:46]   [B] resnet50: T=1.000  ECE 0.070 -> 0.070
+[2026-06-06 11:00:08]   [B] efficientnet_b3: T=0.936  ECE 0.228 -> 0.220
+[2026-06-06 11:03:30]   [B] vit_base: T=0.857  ECE 0.071 -> 0.051
+[2026-06-06 11:03:30] [B] calibration_ece.csv saved
+[2026-06-06 11:03:30] ==== STAGE OK: B_calibration (607s) ====
+[2026-06-06 11:03:30] ==== STAGE START: C_selective_triage ====
+[2026-06-06 11:04:31]   [C] resnet50 selective curves saved
+[2026-06-06 11:05:15]   [C] efficientnet_b3 selective curves saved
+[2026-06-06 11:06:21]   [C] vit_base selective curves saved
+[2026-06-06 11:06:21] ==== STAGE OK: C_selective_triage (171s) ====
+[2026-06-06 11:06:21] ==== STAGE START: D_aug_baseline ====
+[2026-06-06 11:06:21] [D] training aug-robust resnet50 for 12 epochs...
+[2026-06-06 14:12:28] [D] aug-robust stress eval saved
+[2026-06-06 14:12:28] ==== STAGE OK: D_aug_baseline (11167s) ====
+[2026-06-06 14:12:28] ==== STAGE START: E_finetune_restored ====
+[2026-06-06 14:12:28] [E] training resnet50 on A-ESRGAN-restored images for 8 epochs (restoration applied on the fly — may be slow)...
+[2026-06-06 15:56:32] [E] ft-restored eval saved
+[2026-06-06 15:56:32] ==== STAGE OK: E_finetune_restored (6244s) ====
+[2026-06-06 15:56:32] ==== STAGE START: F_summary ====
+[2026-06-06 15:56:32] Summary written to /content/drive/MyDrive/Thesis/results/phase6_overnight_boost/OVERNIGHT_SUMMARY.md
+[2026-06-06 15:56:32] ==== STAGE OK: F_summary (0s) ====
+[2026-06-06 15:56:32] ALL STAGES COMPLETE — see results/phase6_overnight_boost/

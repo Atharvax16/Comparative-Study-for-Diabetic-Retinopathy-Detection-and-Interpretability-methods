@@ -1,0 +1,8 @@
+degradation,restorer,variant,psnr_raw,psnr_restored,psnr_gain,ssim_raw,ssim_restored,ssim_gain,acc_raw,acc_restored,acc_delta
+exposure,Cold Diffusion,cold_diff,16.7676,28.9675,12.1999,0.7574,0.8689,0.1115,0.4883,0.4477,-0.0405
+blur,Cold Diffusion,cold_diff,30.1732,33.7939,3.6206,0.8427,0.8533,0.0106,0.4345,0.4023,-0.0322
+exposure,SwinIR+GAN,swinir_gan,16.7676,20.3794,3.6118,0.7574,0.7592,0.0018,0.4883,0.3958,-0.0924
+noise,A-ESRGAN,genai,32.2373,34.7512,2.5139,0.6492,0.8642,0.215,0.4886,0.4265,-0.0621
+blur,DDPM (pathology),ddpm_path,30.1732,32.2626,2.0894,0.8427,0.847,0.0043,0.4345,0.3636,-0.0708
+noise,DDPM (pathology),ddpm_path,32.2373,33.3998,1.1625,0.6492,0.8482,0.199,0.4886,0.3939,-0.0947
+noise,SwinIR+GAN,swinir_gan,32.2373,32.3753,0.138,0.6492,0.8109,0.1618,0.4886,0.4246,-0.064
